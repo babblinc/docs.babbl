@@ -1684,9 +1684,6 @@
 
         // Tab switching
         function switchTab(tabName) {
-            event.preventDefault();
-            event.stopPropagation();
-            
             // Hide all ribbon contents
             document.querySelectorAll('.ribbon-content').forEach(content => {
                 content.classList.remove('active');
@@ -1713,15 +1710,11 @@
 
         // Backstage functions
         function openBackstage() {
-            event.preventDefault();
-            event.stopPropagation();
             document.getElementById('backstage').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeBackstage() {
-            event.preventDefault();
-            event.stopPropagation();
             document.getElementById('backstage').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
@@ -1876,50 +1869,55 @@
             if (command === 'cut') {
                 const selectedText = window.getSelection().toString();
                 if (selectedText) {
-                    // Copy to clipboard first
-                    if (navigator.clipboard) {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(selectedText).then(() => {
                             document.execCommand('delete');
-                            alert('Text cut to clipboard');
+                            showMessage('Text cut successfully');
                         }).catch(() => {
                             document.execCommand('cut');
+                            showMessage('Text cut');
                         });
                     } else {
                         document.execCommand('cut');
+                        showMessage('Text cut');
                     }
                 } else {
-                    alert('Please select text to cut');
+                    showMessage('Please select text to cut');
                 }
             } else if (command === 'copy') {
                 const selectedText = window.getSelection().toString();
                 if (selectedText) {
-                    if (navigator.clipboard) {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
                         navigator.clipboard.writeText(selectedText).then(() => {
-                            alert('Text copied to clipboard');
+                            showMessage('Text copied successfully');
                         }).catch(() => {
                             document.execCommand('copy');
+                            showMessage('Text copied');
                         });
                     } else {
                         document.execCommand('copy');
+                        showMessage('Text copied');
                     }
                 } else {
-                    alert('Please select text to copy');
+                    showMessage('Please select text to copy');
                 }
             } else if (command === 'paste') {
-                if (navigator.clipboard) {
+                if (navigator.clipboard && navigator.clipboard.readText) {
                     navigator.clipboard.readText().then(text => {
                         if (text) {
                             document.execCommand('insertText', false, text);
-                            alert('Text pasted from clipboard');
+                            showMessage('Text pasted successfully');
                             saveState();
                         } else {
-                            alert('Clipboard is empty');
+                            showMessage('Clipboard is empty');
                         }
                     }).catch(() => {
                         document.execCommand('paste');
+                        showMessage('Text pasted');
                     });
                 } else {
                     document.execCommand('paste');
+                    showMessage('Text pasted');
                 }
             } else {
                 document.execCommand(command, false, null);
@@ -2670,9 +2668,6 @@
 
         // Add missing toggle functions
         function toggleDropdown(button) {
-            event.preventDefault();
-            event.stopPropagation();
-            
             const dropdown = button.closest('.dropdown');
             const isActive = dropdown.classList.contains('active');
             
@@ -2686,6 +2681,32 @@
         }
 
         // Helper functions
+        function showMessage(message) {
+            // Create a temporary message element
+            const messageEl = document.createElement('div');
+            messageEl.textContent = message;
+            messageEl.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #0078d4;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 4px;
+                z-index: 10000;
+                font-size: 14px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            `;
+            document.body.appendChild(messageEl);
+            
+            // Remove after 2 seconds
+            setTimeout(() => {
+                if (messageEl.parentNode) {
+                    messageEl.parentNode.removeChild(messageEl);
+                }
+            }, 2000);
+        }
+
         function getCurrentPage() {
             return document.querySelector('.document-page:last-child');
         }
@@ -3094,4 +3115,4 @@
                 range.deleteContents();
             }
         }
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96807d5d05aa01cc',t:'MTc1NDAwMDQ5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96808055b52746b2',t:'MTc1NDAwMDYxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
