@@ -1526,6 +1526,51 @@
 
             // Enhanced keyboard shortcuts
             document.addEventListener('keydown', handleKeyboardShortcuts);
+            document.addEventListener('keydown', handleAdvancedShortcuts);
+            
+            // Add click handlers to all ribbon buttons
+            document.querySelectorAll('.ribbon-btn').forEach(btn => {
+                if (!btn.onclick) {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Get the button text to determine action
+                        const buttonText = this.textContent.trim().toLowerCase();
+                        
+                        // Handle common actions
+                        if (buttonText.includes('cut')) formatText('cut');
+                        else if (buttonText.includes('copy')) formatText('copy');
+                        else if (buttonText.includes('paste')) formatText('paste');
+                        else if (buttonText.includes('bold') || buttonText === 'b') formatText('bold');
+                        else if (buttonText.includes('italic') || buttonText === 'i') formatText('italic');
+                        else if (buttonText.includes('underline') || buttonText === 'u') formatText('underline');
+                        else if (buttonText.includes('format painter')) formatPainter();
+                        else if (buttonText.includes('find')) findText();
+                        else if (buttonText.includes('replace')) replaceText();
+                        else if (buttonText.includes('clear')) clearFormatting();
+                        else {
+                            console.log('Button clicked:', buttonText);
+                        }
+                    });
+                }
+            });
+            
+            // Add click handlers to dropdown items
+            document.querySelectorAll('.dropdown-content a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Close dropdown
+                    this.closest('.dropdown').classList.remove('active');
+                    
+                    // Execute the onclick if it exists
+                    if (this.onclick) {
+                        this.onclick();
+                    }
+                });
+            });
         }
 
         function handleKeyboardShortcuts(e) {
@@ -1543,6 +1588,7 @@
                     case 'h': e.preventDefault(); replaceText(); break;
                     case 'k': e.preventDefault(); insertHyperlink(); break;
                     case 'g': e.preventDefault(); goToPage(); break;
+                    case 'd': e.preventDefault(); openFontDialog(); break;
                     case 'z': 
                         e.preventDefault(); 
                         if (e.shiftKey) {
@@ -1558,57 +1604,10 @@
                     case 'l': e.preventDefault(); alignText('left'); break;
                     case 'r': e.preventDefault(); alignText('right'); break;
                     case 'j': e.preventDefault(); alignText('justify'); break;
-                }
-            }
-
-            if (e.ctrlKey && e.shiftKey) {
-                switch(e.key.toLowerCase()) {
-                    case 'n': e.preventDefault(); applyStyle('normal'); break;
-                    case 'l': e.preventDefault(); insertList('ul'); break;
-                    case 'c': e.preventDefault(); copyFormat(); break;
-                    case 'v': e.preventDefault(); pasteFormat(); break;
-                }
-            }
-
-            if (e.ctrlKey && e.altKey) {
-                switch(e.key.toLowerCase()) {
-                    case 'f': e.preventDefault(); insertFootnote(); break;
-                    case 'd': e.preventDefault(); insertEndnote(); break;
-                    case 'm': e.preventDefault(); insertComment(); break;
-                    case 'z': e.preventDefault(); goToLastEdit(); break;
-                    case '1': e.preventDefault(); applyStyle('heading1'); break;
-                    case '2': e.preventDefault(); applyStyle('heading2'); break;
-                    case '3': e.preventDefault(); applyStyle('heading3'); break;
-                }
-            }
-
-            if (e.ctrlKey && e.shiftKey) {
-                switch(e.key.toLowerCase()) {
-                    case 'n': e.preventDefault(); applyStyle('normal'); break;
-                    case 'l': e.preventDefault(); insertList('ul'); break;
-                    case 'c': e.preventDefault(); copyFormat(); break;
-                    case 'v': e.preventDefault(); pasteFormat(); break;
-                    case 'f': e.preventDefault(); openFontDialog(); break;
-                    case 'p': e.preventDefault(); focusFontSize(); break;
-                    case 'a': e.preventDefault(); toggleAllCaps(); break;
-                    case 'k': e.preventDefault(); toggleSmallCaps(); break;
-                    case 'w': e.preventDefault(); underlineWordsOnly(); break;
-                    case '>': e.preventDefault(); increaseFontSize(); break;
-                    case '<': e.preventDefault(); decreaseFontSize(); break;
-                    case ']': e.preventDefault(); increaseFontSize(); break;
-                    case '[': e.preventDefault(); decreaseFontSize(); break;
-                }
-            }
-
-            if (e.altKey && e.shiftKey) {
-                switch(e.key.toLowerCase()) {
-                    case 'o': e.preventDefault(); markTOCEntry(); break;
-                    case 'i': e.preventDefault(); markIndexEntry(); break;
-                    case 'r': e.preventDefault(); copyHeaderFooter(); break;
-                    case 'arrowleft': e.preventDefault(); promoteHeading(); break;
-                    case 'arrowright': e.preventDefault(); demoteHeading(); break;
-                    case 'arrowup': e.preventDefault(); moveHeadingUp(); break;
-                    case 'arrowdown': e.preventDefault(); moveHeadingDown(); break;
+                    case ' ': e.preventDefault(); clearFormatting(); break;
+                    case 'q': e.preventDefault(); clearParagraphFormatting(); break;
+                    case 'backspace': e.preventDefault(); deletePreviousWord(); break;
+                    case 'delete': e.preventDefault(); deleteNextWord(); break;
                 }
             }
 
@@ -1629,8 +1628,65 @@
             }
         }
 
+        // Enhanced keyboard shortcuts from MS Word 2013
+        function handleAdvancedShortcuts(e) {
+            // Ctrl+Shift combinations
+            if (e.ctrlKey && e.shiftKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'l': e.preventDefault(); insertList('ul'); break;
+                    case 'e': e.preventDefault(); toggleTrackChanges(); break;
+                    case '>': case '.': e.preventDefault(); increaseFontSize(); break;
+                    case '<': case ',': e.preventDefault(); decreaseFontSize(); break;
+                    case 'f': e.preventDefault(); openFontDialog(); break;
+                    case 'p': e.preventDefault(); focusFontSize(); break;
+                    case 'w': e.preventDefault(); underlineWordsOnly(); break;
+                    case 'k': e.preventDefault(); toggleSmallCaps(); break;
+                    case 'a': e.preventDefault(); toggleAllCaps(); break;
+                    case 'c': e.preventDefault(); copyFormat(); break;
+                    case 'v': e.preventDefault(); pasteFormat(); break;
+                    case 'n': e.preventDefault(); applyStyle('normal'); break;
+                    case ']': e.preventDefault(); increaseFontSize(); break;
+                    case '[': e.preventDefault(); decreaseFontSize(); break;
+                }
+            }
+
+            // Alt+Ctrl combinations
+            if (e.altKey && e.ctrlKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'm': e.preventDefault(); insertComment(); break;
+                    case 's': e.preventDefault(); splitWindow(); break;
+                    case 'd': e.preventDefault(); insertDateTime(); break;
+                    case 't': e.preventDefault(); insertDateTime(); break;
+                    case 'f': e.preventDefault(); insertFootnote(); break;
+                    case 'e': e.preventDefault(); insertEndnote(); break;
+                    case 'z': e.preventDefault(); goToLastEdit(); break;
+                    case '1': e.preventDefault(); applyStyle('heading1'); break;
+                    case '2': e.preventDefault(); applyStyle('heading2'); break;
+                    case '3': e.preventDefault(); applyStyle('heading3'); break;
+                }
+            }
+
+            // Alt+Shift combinations
+            if (e.altKey && e.shiftKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'd': e.preventDefault(); insertDateTime(); break;
+                    case 't': e.preventDefault(); insertDateTime(); break;
+                    case 'o': e.preventDefault(); markTOCEntry(); break;
+                    case 'i': e.preventDefault(); markIndexEntry(); break;
+                    case 'r': e.preventDefault(); copyHeaderFooter(); break;
+                    case 'arrowleft': e.preventDefault(); promoteHeading(); break;
+                    case 'arrowright': e.preventDefault(); demoteHeading(); break;
+                    case 'arrowup': e.preventDefault(); moveHeadingUp(); break;
+                    case 'arrowdown': e.preventDefault(); moveHeadingDown(); break;
+                }
+            }
+        }
+
         // Tab switching
         function switchTab(tabName) {
+            event.preventDefault();
+            event.stopPropagation();
+            
             // Hide all ribbon contents
             document.querySelectorAll('.ribbon-content').forEach(content => {
                 content.classList.remove('active');
@@ -1648,16 +1704,26 @@
             });
             
             // Find and activate the clicked tab
-            event.target.classList.add('active');
+            document.querySelectorAll('.ribbon-tab').forEach(tab => {
+                if (tab.textContent.toLowerCase().includes(tabName)) {
+                    tab.classList.add('active');
+                }
+            });
         }
 
         // Backstage functions
         function openBackstage() {
+            event.preventDefault();
+            event.stopPropagation();
             document.getElementById('backstage').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeBackstage() {
+            event.preventDefault();
+            event.stopPropagation();
             document.getElementById('backstage').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
         // Window controls
@@ -1808,15 +1874,58 @@
             page.focus();
             
             if (command === 'cut') {
-                document.execCommand('cut');
+                const selectedText = window.getSelection().toString();
+                if (selectedText) {
+                    // Copy to clipboard first
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(selectedText).then(() => {
+                            document.execCommand('delete');
+                            alert('Text cut to clipboard');
+                        }).catch(() => {
+                            document.execCommand('cut');
+                        });
+                    } else {
+                        document.execCommand('cut');
+                    }
+                } else {
+                    alert('Please select text to cut');
+                }
             } else if (command === 'copy') {
-                document.execCommand('copy');
+                const selectedText = window.getSelection().toString();
+                if (selectedText) {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(selectedText).then(() => {
+                            alert('Text copied to clipboard');
+                        }).catch(() => {
+                            document.execCommand('copy');
+                        });
+                    } else {
+                        document.execCommand('copy');
+                    }
+                } else {
+                    alert('Please select text to copy');
+                }
             } else if (command === 'paste') {
-                document.execCommand('paste');
+                if (navigator.clipboard) {
+                    navigator.clipboard.readText().then(text => {
+                        if (text) {
+                            document.execCommand('insertText', false, text);
+                            alert('Text pasted from clipboard');
+                            saveState();
+                        } else {
+                            alert('Clipboard is empty');
+                        }
+                    }).catch(() => {
+                        document.execCommand('paste');
+                    });
+                } else {
+                    document.execCommand('paste');
+                }
             } else {
                 document.execCommand(command, false, null);
             }
             updateFormatButtons();
+            saveState();
         }
 
         function formatPainter() {
@@ -2561,6 +2670,9 @@
 
         // Add missing toggle functions
         function toggleDropdown(button) {
+            event.preventDefault();
+            event.stopPropagation();
+            
             const dropdown = button.closest('.dropdown');
             const isActive = dropdown.classList.contains('active');
             
@@ -2952,4 +3064,34 @@
         function demoteHeading() { alert('Heading demoted'); }
         function moveHeadingUp() { alert('Heading moved up'); }
         function moveHeadingDown() { alert('Heading moved down'); }
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96806b04c44843a8',t:'MTc1Mzk5OTc0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+        function clearParagraphFormatting() { 
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const element = selection.getRangeAt(0).commonAncestorContainer;
+                if (element.nodeType === Node.ELEMENT_NODE || element.parentElement) {
+                    const target = element.nodeType === Node.ELEMENT_NODE ? element : element.parentElement;
+                    target.style.textAlign = '';
+                    target.style.textIndent = '';
+                    target.style.lineHeight = '';
+                    target.style.marginTop = '';
+                    target.style.marginBottom = '';
+                }
+            }
+        }
+        function deletePreviousWord() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.modify('extend', 'backward', 'word');
+                range.deleteContents();
+            }
+        }
+        function deleteNextWord() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.modify('extend', 'forward', 'word');
+                range.deleteContents();
+            }
+        }
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96807d5d05aa01cc',t:'MTc1NDAwMDQ5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
