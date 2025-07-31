@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babbl Docs 2013</title>
+    <title>Babbl Docs</title>
     <style>
         * {
             margin: 0;
@@ -552,18 +552,10 @@
         <div class="ribbon-content active" id="home-content">
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="formatText('cut')">
-                        <span class="icon">✂️</span>Cut
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('copy')">
-                        <span class="icon">📋</span>Copy
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('paste')">
-                        <span class="icon">📄</span>Paste
-                    </button>
-                    <button class="ribbon-btn" onclick="formatPainter()">
-                        <span class="icon">🖌️</span>Format Painter
-                    </button>
+                    <button class="ribbon-btn" onclick="formatText('cut')">✂️</button>
+                    <button class="ribbon-btn" onclick="formatText('copy')">📋</button>
+                    <button class="ribbon-btn" onclick="formatText('paste')">📄</button>
+                    <button class="ribbon-btn" onclick="formatPainter()">🖌️</button>
                 </div>
                 <div class="ribbon-group-label">Clipboard</div>
             </div>
@@ -576,80 +568,24 @@
                         <option value="Times New Roman">Times New Roman</option>
                         <option value="Georgia">Georgia</option>
                         <option value="Verdana">Verdana</option>
-                        <option value="Helvetica">Helvetica</option>
-                        <option value="Comic Sans MS">Comic Sans MS</option>
-                        <option value="Impact">Impact</option>
-                        <option value="Trebuchet MS">Trebuchet MS</option>
-                        <option value="Courier New">Courier New</option>
                     </select>
                     <input type="number" class="font-size" value="11" min="8" max="72" onchange="changeFontSize(this.value)">
-                </div>
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="formatText('bold')" id="bold-btn">
-                        <span class="icon"><strong>B</strong></span>
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('italic')" id="italic-btn">
-                        <span class="icon"><em>I</em></span>
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('underline')" id="underline-btn">
-                        <span class="icon"><u>U</u></span>
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('strikeThrough')">
-                        <span class="icon">S̶</span>
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('subscript')">
-                        <span class="icon">X₂</span>
-                    </button>
-                    <button class="ribbon-btn" onclick="formatText('superscript')">
-                        <span class="icon">X²</span>
-                    </button>
+                    <button class="ribbon-btn" onclick="formatText('bold')" id="bold-btn"><strong>B</strong></button>
+                    <button class="ribbon-btn" onclick="formatText('italic')" id="italic-btn"><em>I</em></button>
+                    <button class="ribbon-btn" onclick="formatText('underline')" id="underline-btn"><u>U</u></button>
                     <input type="color" class="color-picker" onchange="changeFontColor(this.value)" title="Font Color">
-                    <input type="color" class="color-picker" onchange="highlightText(this.value)" title="Highlight" value="#ffff00">
                 </div>
                 <div class="ribbon-group-label">Font</div>
             </div>
 
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertList('ul')">
-                        <span class="icon">•</span>Bullets
-                    </button>
-                    <button class="ribbon-btn" onclick="insertList('ol')">
-                        <span class="icon">1.</span>Numbering
-                    </button>
-                    <button class="ribbon-btn" onclick="decreaseIndent()">
-                        <span class="icon">⬅️</span>Decrease
-                    </button>
-                    <button class="ribbon-btn" onclick="increaseIndent()">
-                        <span class="icon">➡️</span>Increase
-                    </button>
-                </div>
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="alignText('left')" id="align-left">
-                        <span class="icon">⬅️</span>
-                    </button>
-                    <button class="ribbon-btn" onclick="alignText('center')" id="align-center">
-                        <span class="icon">⬌</span>
-                    </button>
-                    <button class="ribbon-btn" onclick="alignText('right')" id="align-right">
-                        <span class="icon">➡️</span>
-                    </button>
-                    <button class="ribbon-btn" onclick="alignText('justify')" id="align-justify">
-                        <span class="icon">⬍</span>
-                    </button>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">📏</span>Line Spacing ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="setLineSpacing(1.0)">1.0</a>
-                            <a href="#" onclick="setLineSpacing(1.15)">1.15</a>
-                            <a href="#" onclick="setLineSpacing(1.5)">1.5</a>
-                            <a href="#" onclick="setLineSpacing(2.0)">2.0</a>
-                            <a href="#" onclick="setLineSpacing(2.5)">2.5</a>
-                            <a href="#" onclick="setLineSpacing(3.0)">3.0</a>
-                        </div>
-                    </div>
+                    <button class="ribbon-btn" onclick="insertList('ul')">•</button>
+                    <button class="ribbon-btn" onclick="insertList('ol')">1.</button>
+                    <button class="ribbon-btn" onclick="alignText('left')" id="align-left">⬅️</button>
+                    <button class="ribbon-btn" onclick="alignText('center')" id="align-center">⬌</button>
+                    <button class="ribbon-btn" onclick="alignText('right')" id="align-right">➡️</button>
+                    <button class="ribbon-btn" onclick="alignText('justify')" id="align-justify">⬍</button>
                 </div>
                 <div class="ribbon-group-label">Paragraph</div>
             </div>
@@ -657,39 +593,19 @@
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
                     <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🎨</span>Styles ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">🎨 ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="applyStyle('normal')">Normal</a>
                             <a href="#" onclick="applyStyle('heading1')">Heading 1</a>
                             <a href="#" onclick="applyStyle('heading2')">Heading 2</a>
                             <a href="#" onclick="applyStyle('heading3')">Heading 3</a>
-                            <a href="#" onclick="applyStyle('title')">Title</a>
-                            <a href="#" onclick="applyStyle('subtitle')">Subtitle</a>
-                            <a href="#" onclick="applyStyle('quote')">Quote</a>
                         </div>
                     </div>
-                    <button class="ribbon-btn" onclick="clearFormatting()">
-                        <span class="icon">🧹</span>Clear
-                    </button>
+                    <button class="ribbon-btn" onclick="clearFormatting()">🧹</button>
+                    <button class="ribbon-btn" onclick="findText()">🔍</button>
+                    <button class="ribbon-btn" onclick="replaceText()">🔄</button>
                 </div>
-                <div class="ribbon-group-label">Styles</div>
-            </div>
-
-            <div class="ribbon-group">
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="findText()">
-                        <span class="icon">🔍</span>Find
-                    </button>
-                    <button class="ribbon-btn" onclick="replaceText()">
-                        <span class="icon">🔄</span>Replace
-                    </button>
-                    <button class="ribbon-btn" onclick="selectAll()">
-                        <span class="icon">📄</span>Select All
-                    </button>
-                </div>
-                <div class="ribbon-group-label">Editing</div>
+                <div class="ribbon-group-label">Styles & Editing</div>
             </div>
         </div>
 
@@ -697,15 +613,9 @@
         <div class="ribbon-content" id="insert-content">
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn large" onclick="insertCoverPage()">
-                        <span class="icon">📄</span><br>Cover Page
-                    </button>
-                    <button class="ribbon-btn large" onclick="insertBlankPage()">
-                        <span class="icon">📃</span><br>Blank Page
-                    </button>
-                    <button class="ribbon-btn large" onclick="insertPageBreak()">
-                        <span class="icon">📄</span><br>Page Break
-                    </button>
+                    <button class="ribbon-btn" onclick="insertCoverPage()">📄</button>
+                    <button class="ribbon-btn" onclick="insertBlankPage()">📃</button>
+                    <button class="ribbon-btn" onclick="insertPageBreak()">📄</button>
                 </div>
                 <div class="ribbon-group-label">Pages</div>
             </div>
@@ -713,134 +623,38 @@
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
                     <div class="dropdown">
-                        <button class="ribbon-btn large" onclick="toggleDropdown(this)">
-                            <span class="icon">📊</span><br>Table ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">📊 ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="insertTable(2, 2)">2x2 Table</a>
                             <a href="#" onclick="insertTable(3, 3)">3x3 Table</a>
                             <a href="#" onclick="insertTable(4, 4)">4x4 Table</a>
-                            <a href="#" onclick="insertTable(5, 5)">5x5 Table</a>
                             <a href="#" onclick="insertCustomTable()">Custom Table</a>
                         </div>
                     </div>
+                    <button class="ribbon-btn" onclick="insertPicture()">🖼️</button>
+                    <button class="ribbon-btn" onclick="insertChart()">📈</button>
                 </div>
-                <div class="ribbon-group-label">Tables</div>
+                <div class="ribbon-group-label">Tables & Media</div>
             </div>
 
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertPicture()">
-                        <span class="icon">🖼️</span>Picture
-                    </button>
-                    <button class="ribbon-btn" onclick="insertOnlinePicture()">
-                        <span class="icon">🌐</span>Online
-                    </button>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🔷</span>Shapes ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="insertShape('rectangle')">Rectangle</a>
-                            <a href="#" onclick="insertShape('circle')">Circle</a>
-                            <a href="#" onclick="insertShape('triangle')">Triangle</a>
-                            <a href="#" onclick="insertShape('arrow')">Arrow</a>
-                            <a href="#" onclick="insertShape('star')">Star</a>
-                        </div>
-                    </div>
-                    <button class="ribbon-btn" onclick="insertSmartArt()">
-                        <span class="icon">📊</span>SmartArt
-                    </button>
-                    <button class="ribbon-btn" onclick="insertChart()">
-                        <span class="icon">📈</span>Chart
-                    </button>
+                    <button class="ribbon-btn" onclick="insertHyperlink()">🔗</button>
+                    <button class="ribbon-btn" onclick="insertBookmark()">🔖</button>
+                    <button class="ribbon-btn" onclick="insertHeader()">📄</button>
+                    <button class="ribbon-btn" onclick="insertFooter()">📄</button>
                 </div>
-                <div class="ribbon-group-label">Illustrations</div>
+                <div class="ribbon-group-label">Links & Headers</div>
             </div>
 
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertHyperlink()">
-                        <span class="icon">🔗</span>Hyperlink
-                    </button>
-                    <button class="ribbon-btn" onclick="insertBookmark()">
-                        <span class="icon">🔖</span>Bookmark
-                    </button>
-                    <button class="ribbon-btn" onclick="insertCrossReference()">
-                        <span class="icon">↗️</span>Cross-ref
-                    </button>
+                    <button class="ribbon-btn" onclick="insertTextBox()">📝</button>
+                    <button class="ribbon-btn" onclick="insertWordArt()">🎨</button>
+                    <button class="ribbon-btn" onclick="insertDateTime()">📅</button>
+                    <button class="ribbon-btn" onclick="insertSymbol()">Ω</button>
                 </div>
-                <div class="ribbon-group-label">Links</div>
-            </div>
-
-            <div class="ribbon-group">
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertHeader()">
-                        <span class="icon">📄</span>Header
-                    </button>
-                    <button class="ribbon-btn" onclick="insertFooter()">
-                        <span class="icon">📄</span>Footer
-                    </button>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🔢</span>Page # ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="insertPageNumber('top')">Top of Page</a>
-                            <a href="#" onclick="insertPageNumber('bottom')">Bottom of Page</a>
-                            <a href="#" onclick="insertPageNumber('margins')">Page Margins</a>
-                            <a href="#" onclick="insertPageNumber('current')">Current Position</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="ribbon-group-label">Header & Footer</div>
-            </div>
-
-            <div class="ribbon-group">
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertTextBox()">
-                        <span class="icon">📝</span>Text Box
-                    </button>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">⚡</span>Quick Parts ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="insertDocProperty()">Document Property</a>
-                            <a href="#" onclick="insertField()">Field</a>
-                            <a href="#" onclick="insertAutoText()">AutoText</a>
-                        </div>
-                    </div>
-                    <button class="ribbon-btn" onclick="insertWordArt()">
-                        <span class="icon">🎨</span>WordArt
-                    </button>
-                    <button class="ribbon-btn" onclick="insertDateTime()">
-                        <span class="icon">📅</span>Date
-                    </button>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">📦</span>Object ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="insertExcelSheet()">Excel Worksheet</a>
-                            <a href="#" onclick="insertPackage()">Package</a>
-                            <a href="#" onclick="insertEquation()">Equation</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="ribbon-group-label">Text</div>
-            </div>
-
-            <div class="ribbon-group">
-                <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="insertSymbol()">
-                        <span class="icon">Ω</span>Symbol
-                    </button>
-                    <button class="ribbon-btn" onclick="insertEquation()">
-                        <span class="icon">∑</span>Equation
-                    </button>
-                </div>
-                <div class="ribbon-group-label">Symbols</div>
+                <div class="ribbon-group-label">Text & Symbols</div>
             </div>
         </div>
 
@@ -849,80 +663,40 @@
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
                     <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🎨</span>Themes ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">🎨 ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="applyTheme('office')">Office</a>
                             <a href="#" onclick="applyTheme('facet')">Facet</a>
                             <a href="#" onclick="applyTheme('integral')">Integral</a>
-                            <a href="#" onclick="applyTheme('ion')">Ion</a>
-                            <a href="#" onclick="applyTheme('retrospect')">Retrospect</a>
                         </div>
                     </div>
                     <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🌈</span>Colors ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">🌈 ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="applyColorScheme('blue')">Blue</a>
                             <a href="#" onclick="applyColorScheme('red')">Red</a>
                             <a href="#" onclick="applyColorScheme('green')">Green</a>
-                            <a href="#" onclick="applyColorScheme('orange')">Orange</a>
-                            <a href="#" onclick="applyColorScheme('purple')">Purple</a>
                         </div>
                     </div>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🔤</span>Fonts ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="applyFontScheme('calibri')">Calibri</a>
-                            <a href="#" onclick="applyFontScheme('cambria')">Cambria</a>
-                            <a href="#" onclick="applyFontScheme('arial')">Arial</a>
-                            <a href="#" onclick="applyFontScheme('times')">Times New Roman</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">📏</span>Spacing ▼
-                        </button>
-                        <div class="dropdown-content">
-                            <a href="#" onclick="setParagraphSpacing('compact')">Compact</a>
-                            <a href="#" onclick="setParagraphSpacing('tight')">Tight</a>
-                            <a href="#" onclick="setParagraphSpacing('open')">Open</a>
-                            <a href="#" onclick="setParagraphSpacing('relaxed')">Relaxed</a>
-                            <a href="#" onclick="setParagraphSpacing('double')">Double</a>
-                        </div>
-                    </div>
+                    <button class="ribbon-btn" onclick="changePageColor()">🎨</button>
                 </div>
-                <div class="ribbon-group-label">Document Formatting</div>
+                <div class="ribbon-group-label">Themes & Colors</div>
             </div>
 
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
                     <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">💧</span>Watermark ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">💧 ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="insertTextWatermark()">Text Watermark</a>
-                            <a href="#" onclick="insertPictureWatermark()">Picture Watermark</a>
                             <a href="#" onclick="removeWatermark()">Remove Watermark</a>
                         </div>
                     </div>
-                    <button class="ribbon-btn" onclick="changePageColor()">
-                        <span class="icon">🎨</span>Page Color
-                    </button>
                     <div class="dropdown">
-                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
-                            <span class="icon">🖼️</span>Borders ▼
-                        </button>
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">🖼️ ▼</button>
                         <div class="dropdown-content">
                             <a href="#" onclick="addPageBorder('box')">Box</a>
                             <a href="#" onclick="addPageBorder('shadow')">Shadow</a>
-                            <a href="#" onclick="addPageBorder('3d')">3-D</a>
-                            <a href="#" onclick="addPageBorder('custom')">Custom</a>
                             <a href="#" onclick="removePageBorder()">No Border</a>
                         </div>
                     </div>
@@ -2667,4 +2441,253 @@
                 } else {
                     // Change to Landscape
                     page.style.width = '11in';
-                    page.style.height = '8.5in';<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96804624c0a22e92',t:'MTc1Mzk5ODIzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+                    page.style.height = '8.5in';
+                    alert('Changed to Landscape orientation');
+                }
+            });
+        }
+
+        function setPaperSize(size) {
+            const pages = document.querySelectorAll('.document-page');
+            pages.forEach(page => {
+                page.className = page.className.replace(/paper-\w+/, `paper-${size}`);
+            });
+            currentPaperSize = size;
+            alert(`Changed to ${size.toUpperCase()} paper size`);
+        }
+
+        // Add missing toggle functions
+        function toggleDropdown(button) {
+            const dropdown = button.closest('.dropdown');
+            const isActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+            
+            // Toggle current dropdown
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        // Helper functions
+        function getCurrentPage() {
+            return document.querySelector('.document-page:last-child');
+        }
+
+        function createNewPage() {
+            pageCount++;
+            const newPage = document.createElement('div');
+            newPage.className = `document-page paper-${currentPaperSize}`;
+            newPage.contentEditable = true;
+            newPage.id = `page-${pageCount}`;
+            newPage.onkeyup = handleTyping;
+            newPage.onclick = updateStatus;
+            newPage.onpaste = handlePaste;
+            newPage.innerHTML = `<div class="page-number">Page ${pageCount}</div><p><br></p>`;
+            
+            document.getElementById('document-container').appendChild(newPage);
+            updateStatus();
+            return newPage;
+        }
+
+        function getAllPagesContent() {
+            const pages = document.querySelectorAll('.document-page');
+            let content = '';
+            pages.forEach(page => {
+                content += page.innerHTML + '\n\n';
+            });
+            return content;
+        }
+
+        function getAllPagesText() {
+            const pages = document.querySelectorAll('.document-page');
+            let text = '';
+            pages.forEach(page => {
+                text += page.innerText + '\n\n';
+            });
+            return text;
+        }
+
+        function getWordCount() {
+            const text = getAllPagesText();
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        }
+
+        function getCharacterCount() {
+            return getAllPagesText().length;
+        }
+
+        function handleTyping(event) {
+            const page = event.target;
+            const maxHeight = parseInt(getComputedStyle(page).height);
+            
+            if (page.scrollHeight > maxHeight * 0.9) {
+                createNewPage();
+            }
+            
+            updateStatus();
+            saveState();
+        }
+
+        function handlePaste(event) {
+            setTimeout(() => {
+                updateStatus();
+                saveState();
+            }, 100);
+        }
+
+        function updateStatus() {
+            document.getElementById('word-count').textContent = `Words: ${getWordCount()}`;
+            document.getElementById('page-info').textContent = `Page ${pageCount} of ${pageCount}`;
+        }
+
+        function updateFormatButtons() {
+            // Update button states based on current selection
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const element = selection.getRangeAt(0).commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                    ? selection.getRangeAt(0).commonAncestorContainer.parentElement 
+                    : selection.getRangeAt(0).commonAncestorContainer;
+                
+                const style = getComputedStyle(element);
+                
+                // Update bold button
+                const boldBtn = document.getElementById('bold-btn');
+                if (boldBtn) {
+                    boldBtn.classList.toggle('active', style.fontWeight === 'bold' || style.fontWeight >= 700);
+                }
+                
+                // Update italic button
+                const italicBtn = document.getElementById('italic-btn');
+                if (italicBtn) {
+                    italicBtn.classList.toggle('active', style.fontStyle === 'italic');
+                }
+                
+                // Update underline button
+                const underlineBtn = document.getElementById('underline-btn');
+                if (underlineBtn) {
+                    underlineBtn.classList.toggle('active', style.textDecoration.includes('underline'));
+                }
+            }
+        }
+
+        function saveState() {
+            const state = {
+                content: getAllPagesContent(),
+                pageCount: pageCount,
+                paperSize: currentPaperSize
+            };
+            undoStack.push(JSON.stringify(state));
+            if (undoStack.length > 50) {
+                undoStack.shift();
+            }
+            redoStack = [];
+        }
+
+        function undo() {
+            if (undoStack.length > 1) {
+                redoStack.push(undoStack.pop());
+                const state = JSON.parse(undoStack[undoStack.length - 1]);
+                restoreState(state);
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                const state = JSON.parse(redoStack.pop());
+                undoStack.push(JSON.stringify(state));
+                restoreState(state);
+            }
+        }
+
+        function restoreState(state) {
+            pageCount = state.pageCount;
+            currentPaperSize = state.paperSize;
+            
+            const container = document.getElementById('document-container');
+            container.innerHTML = '';
+            
+            const pages = state.content.split('\n\n');
+            pages.forEach((pageContent, index) => {
+                if (pageContent.trim()) {
+                    const page = document.createElement('div');
+                    page.className = `document-page paper-${currentPaperSize}`;
+                    page.contentEditable = true;
+                    page.id = `page-${index + 1}`;
+                    page.onkeyup = handleTyping;
+                    page.onclick = updateStatus;
+                    page.onpaste = handlePaste;
+                    page.innerHTML = pageContent;
+                    container.appendChild(page);
+                }
+            });
+            
+            updateStatus();
+        }
+
+        // Zoom functions
+        function setZoom(level) {
+            currentZoom = parseInt(level);
+            const pages = document.querySelectorAll('.document-page');
+            pages.forEach(page => {
+                page.style.transform = `scale(${currentZoom / 100})`;
+                page.style.transformOrigin = 'top center';
+            });
+            
+            document.getElementById('zoom-level').textContent = currentZoom + '%';
+            document.getElementById('zoom-info').textContent = `Zoom: ${currentZoom}%`;
+            document.querySelector('.zoom-slider').value = currentZoom;
+        }
+
+        function zoomIn() {
+            if (currentZoom < 200) {
+                setZoom(currentZoom + 10);
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > 50) {
+                setZoom(currentZoom - 10);
+            }
+        }
+
+        // View functions
+        function setView(viewType) {
+            document.querySelectorAll('[id$="-mode"], [id$="-layout"], [id$="-view"]').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const viewMap = {
+                'read': 'read-mode',
+                'print': 'print-layout',
+                'web': 'web-layout',
+                'outline': 'outline-view',
+                'draft': 'draft-view'
+            };
+            
+            const buttonId = viewMap[viewType];
+            if (buttonId) {
+                document.getElementById(buttonId).classList.add('active');
+            }
+            
+            alert(`Switched to ${viewType} view`);
+        }
+
+        // Additional missing functions
+        function goToPage() {
+            const pageNum = prompt('Go to page:');
+            if (pageNum && pageNum <= pageCount) {
+                const page = document.getElementById(`page-${pageNum}`);
+                if (page) {
+                    page.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        function wordCount() {
+            const words = getWordCount();
+            const chars = getCharacterCount();
+            alert(`Word Count: ${words}\nCharacters: ${chars}\nPages: ${pageCount}`);
+        }
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'968051edc465008a',t:'MTc1Mzk5ODcxNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
