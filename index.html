@@ -3,696 +3,2668 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babbl Docs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Babbl Docs 2013</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f1f1;
+            overflow-x: auto;
+            min-width: 320px;
         }
-        
-        .editor-content {
-            min-height: 842px; /* A4 height approximation */
+
+        /* Title Bar */
+        .title-bar {
+            background: linear-gradient(to bottom, #0078d4, #106ebe);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .window-btn {
+            width: 45px;
+            height: 29px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .window-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* File Tab */
+        .file-tab {
+            background: #0078d4;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            margin-right: 2px;
+        }
+
+        .file-tab:hover {
+            background: #106ebe;
+        }
+
+        /* Ribbon */
+        .ribbon {
+            background: #f1f1f1;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .ribbon-tabs {
+            background: #f1f1f1;
+            display: flex;
+            padding: 0 16px;
+            border-bottom: 1px solid #d1d1d1;
+            overflow-x: auto;
+        }
+
+        .ribbon-tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #444;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+
+        .ribbon-tab.active {
+            background: white;
+            border-bottom: 3px solid #0078d4;
+            color: #0078d4;
+        }
+
+        .ribbon-tab:hover:not(.active) {
+            background: #e5e5e5;
+        }
+
+        .ribbon-content {
+            background: white;
+            padding: 8px 16px;
+            display: none;
+            gap: 24px;
+            align-items: flex-start;
+            min-height: 92px;
+            border-bottom: 1px solid #d1d1d1;
+            flex-wrap: wrap;
+            overflow-x: auto;
+        }
+
+        .ribbon-content.active {
+            display: flex;
+        }
+
+        .ribbon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-right: 1px solid #e1e1e1;
+            min-height: 70px;
+            position: relative;
+            min-width: 80px;
+        }
+
+        .ribbon-group:last-child {
+            border-right: none;
+        }
+
+        .ribbon-group-label {
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid #e1e1e1;
+            padding-top: 2px;
             width: 100%;
-            max-width: 816px; /* A4 width approximation */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-            background-color: white;
-            padding: 72px;
-            margin: 0 auto;
+        }
+
+        .ribbon-buttons {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .ribbon-btn {
+            padding: 6px 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            cursor: pointer;
+            font-size: 11px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            min-height: 32px;
+        }
+
+        .ribbon-btn:hover {
+            background: #e5f3ff;
+            border-color: #cce4f7;
+        }
+
+        .ribbon-btn:active {
+            background: #cce4f7;
+            border-color: #92c5f7;
+        }
+
+        .ribbon-btn.active {
+            background: #cce4f7;
+            border-color: #92c5f7;
+        }
+
+        .ribbon-btn.large {
+            flex-direction: column;
+            padding: 8px 12px;
+            font-size: 10px;
+            min-height: 50px;
+        }
+
+        .font-selector, .font-size {
+            padding: 4px 8px;
+            border: 1px solid #d1d1d1;
+            font-size: 11px;
+            margin: 2px;
+        }
+
+        .font-selector {
+            width: 120px;
+        }
+
+        .font-size {
+            width: 50px;
+        }
+
+        /* Document Area */
+        .document-container {
+            background: #f1f1f1;
+            padding: 20px;
+            min-height: calc(100vh - 250px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .document-page {
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             outline: none;
-            line-height: 1.5;
+            font-family: 'Calibri', sans-serif;
+            font-size: 11pt;
+            line-height: 1.15;
+            color: #000;
+            position: relative;
+            overflow: hidden;
         }
-        
-        .toolbar-btn {
-            @apply p-2 rounded-md hover:bg-gray-100 transition-colors duration-150 ease-in-out;
+
+        .page-number {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 10px;
+            color: #666;
+            pointer-events: none;
         }
-        
-        .toolbar-btn.active {
-            @apply bg-blue-100 text-blue-700;
+
+        /* Paper sizes */
+        .paper-a4 { width: 8.27in; height: 11.69in; padding: 1in; }
+        .paper-letter { width: 8.5in; height: 11in; padding: 1in; }
+        .paper-legal { width: 8.5in; height: 14in; padding: 1in; }
+        .paper-a3 { width: 11.69in; height: 16.54in; padding: 1in; }
+        .paper-a5 { width: 5.83in; height: 8.27in; padding: 0.75in; }
+        .paper-tabloid { width: 11in; height: 17in; padding: 1in; }
+
+        /* Status Bar */
+        .status-bar {
+            background: #0078d4;
+            color: white;
+            padding: 4px 16px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        
-        .toolbar-select {
-            @apply border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .dropdown-menu {
+
+        .zoom-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .zoom-slider {
+            width: 100px;
+        }
+
+        /* Backstage View */
+        .backstage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0078d4;
+            z-index: 1000;
+            display: none;
+            color: white;
+        }
+
+        .backstage.active {
+            display: flex;
+        }
+
+        .backstage-nav {
+            width: 200px;
+            background: #106ebe;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        .backstage-nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: white;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .backstage-nav-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .backstage-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .backstage-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Color picker styles */
+        .color-picker {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
             display: none;
             position: absolute;
             background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            z-index: 50;
-            min-width: 180px;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border: 1px solid #ccc;
+            max-height: 300px;
+            overflow-y: auto;
         }
-        
-        .dropdown-item {
-            @apply px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer;
+
+        .dropdown-content a {
+            color: black;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 11px;
         }
-        
-        .menu-btn:hover + .dropdown-menu,
-        .dropdown-menu:hover {
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown.active .dropdown-content {
             display: block;
         }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .ribbon-tabs {
+                padding: 0 8px;
+            }
+            
+            .ribbon-content {
+                padding: 8px;
+                gap: 12px;
+            }
+            
+            .ribbon-group {
+                min-width: 60px;
+                padding: 4px;
+            }
+            
+            .document-page {
+                width: 95% !important;
+                height: auto !important;
+                min-height: 500px;
+                padding: 20px !important;
+            }
+            
+            .document-container {
+                padding: 10px;
+            }
+            
+            .backstage-nav {
+                width: 150px;
+            }
+            
+            .backstage-content {
+                padding: 20px;
+            }
         }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+
+        @media (max-width: 480px) {
+            .title-bar {
+                padding: 4px 8px;
+                font-size: 12px;
+            }
+            
+            .ribbon-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            
+            .font-selector {
+                width: 80px;
+            }
+            
+            .font-size {
+                width: 40px;
+            }
         }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
+
+        /* Icons using Unicode symbols */
+        .icon {
+            font-size: 16px;
+            margin-right: 4px;
         }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a1a1a1;
+
+        /* Table styles */
+        .document-table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0;
         }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .document-table td, .document-table th {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
         }
-        
-        .animate-fadeIn {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-        }
-        
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: auto;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            white-space: nowrap;
-            font-size: 12px;
-        }
-        
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
+
+        /* Print styles */
+        @media print {
+            .title-bar, .ribbon, .status-bar {
+                display: none;
+            }
+            
+            .document-container {
+                background: white;
+                padding: 0;
+            }
+            
+            .document-page {
+                box-shadow: none;
+                page-break-after: always;
+            }
+            
+            .document-page:last-child {
+                page-break-after: auto;
+            }
         }
     </style>
 </head>
-<body class="h-screen flex flex-col">
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-2">
-            <div class="flex items-center justify-between">
-                <!-- Logo and Document Title -->
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
-                        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-2 rounded-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                        <span class="ml-2 text-xl font-semibold text-gray-800">Babbl Docs</span>
-                    </div>
-                    <div class="relative">
-                        <input type="text" id="document-title" value="Untitled document" class="border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none py-1 px-2 text-gray-700">
-                        <div class="absolute inset-x-0 bottom-0 h-0.5 bg-blue-500 scale-x-0 transition-transform origin-left" id="title-underline"></div>
-                    </div>
-                </div>
-                
-                <!-- Right side buttons -->
-                <div class="flex items-center space-x-3">
-                    <div class="tooltip">
-                        <button class="toolbar-btn flex items-center text-sm text-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
-                            Share
-                        </button>
-                        <span class="tooltip-text">Share document</span>
-                    </div>
-                    
-                    <div class="h-6 border-r border-gray-300"></div>
-                    
-                    <div class="tooltip">
-                        <img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="User" class="w-8 h-8 rounded-full">
-                        <span class="tooltip-text">Your account</span>
-                    </div>
-                </div>
-            </div>
+<body>
+    <!-- Title Bar -->
+    <div class="title-bar">
+        <div>Document1 - Babbl Docs</div>
+        <div class="window-controls">
+            <button class="window-btn" onclick="minimizeWindow()">−</button>
+            <button class="window-btn" onclick="maximizeWindow()">□</button>
+            <button class="window-btn" onclick="closeWindow()">×</button>
         </div>
-    </header>
+    </div>
 
-    <!-- Toolbar -->
-    <div class="bg-white border-b border-gray-200 py-1 px-4 shadow-sm">
-        <div class="flex flex-wrap items-center space-x-1">
-            <!-- File Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">File</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        New
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
-                        </svg>
-                        Open
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                        </svg>
-                        Save
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Download
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                        Print
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Edit Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">Edit</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                        </svg>
-                        Undo
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-                        </svg>
-                        Redo
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
-                        </svg>
-                        Cut
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                        </svg>
-                        Copy
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        Paste
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        Find and Replace
-                    </div>
-                </div>
-            </div>
-            
-            <!-- View Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">View</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                        </svg>
-                        Full Screen
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" />
-                        </svg>
-                        Show Outline
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
-                        </svg>
-                        Show Ruler
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Insert Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">Insert</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Image
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                        </svg>
-                        Table
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                        </svg>
-                        Link
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Video
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Date
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Page Break
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Format Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">Format</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-                        </svg>
-                        Text
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Paragraph
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                        </svg>
-                        Align & Indent
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                        </svg>
-                        Line & Paragraph Spacing
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Tools Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">Tools</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                        Spelling & Grammar
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                        </svg>
-                        Word Count
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
-                        Translate Document
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Help Menu -->
-            <div class="relative mr-2">
-                <button class="toolbar-btn menu-btn">Help</button>
-                <div class="dropdown-menu mt-1">
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Help Center
-                    </div>
-                    <div class="dropdown-item flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        About Babbl Docs
-                    </div>
-                </div>
-            </div>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Font Family -->
-            <select class="toolbar-select mr-2">
-                <option>Arial</option>
-                <option>Times New Roman</option>
-                <option>Courier New</option>
-                <option>Georgia</option>
-                <option>Verdana</option>
-                <option>Inter</option>
-            </select>
-            
-            <!-- Font Size -->
-            <select class="toolbar-select mr-2">
-                <option>8</option>
-                <option>9</option>
-                <option>10</option>
-                <option>11</option>
-                <option selected>12</option>
-                <option>14</option>
-                <option>16</option>
-                <option>18</option>
-                <option>24</option>
-                <option>30</option>
-                <option>36</option>
-                <option>48</option>
-                <option>60</option>
-                <option>72</option>
-            </select>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Text Formatting -->
-            <button class="toolbar-btn tooltip" id="bold-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 12h10M6 12a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v4a2 2 0 01-2 2M6 12a2 2 0 00-2 2v4a2 2 0 002 2h10a2 2 0 002-2v-4a2 2 0 00-2-2H6z" />
-                </svg>
-                <span class="tooltip-text">Bold (Ctrl+B)</span>
+    <!-- Backstage View -->
+    <div class="backstage" id="backstage">
+        <button class="backstage-close" onclick="closeBackstage()">×</button>
+        <div class="backstage-nav">
+            <button class="backstage-nav-item" onclick="newDocument()">
+                <span class="icon">📄</span>New
             </button>
-            
-            <button class="toolbar-btn tooltip" id="italic-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-                <span class="tooltip-text">Italic (Ctrl+I)</span>
+            <button class="backstage-nav-item" onclick="openDocument()">
+                <span class="icon">📂</span>Open
             </button>
-            
-            <button class="toolbar-btn tooltip" id="underline-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 9h16M4 12h16M4 15h16M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Underline (Ctrl+U)</span>
+            <button class="backstage-nav-item" onclick="saveDocument()">
+                <span class="icon">💾</span>Save
             </button>
-            
-            <button class="toolbar-btn tooltip" id="highlight-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-                <span class="tooltip-text">Highlight</span>
+            <button class="backstage-nav-item" onclick="saveAsDocument()">
+                <span class="icon">💾</span>Save As
             </button>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Text Alignment -->
-            <button class="toolbar-btn tooltip" id="align-left-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Align left</span>
+            <button class="backstage-nav-item" onclick="printDocument()">
+                <span class="icon">🖨️</span>Print
             </button>
-            
-            <button class="toolbar-btn tooltip" id="align-center-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M8 12h8M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Align center</span>
+            <button class="backstage-nav-item" onclick="shareDocument()">
+                <span class="icon">📤</span>Share
             </button>
-            
-            <button class="toolbar-btn tooltip" id="align-right-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Align right</span>
+            <button class="backstage-nav-item" onclick="exportDocument()">
+                <span class="icon">📤</span>Export
             </button>
-            
-            <button class="toolbar-btn tooltip" id="align-justify-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Justify</span>
+            <button class="backstage-nav-item" onclick="documentInfo()">
+                <span class="icon">ℹ️</span>Info
             </button>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Lists -->
-            <button class="toolbar-btn tooltip" id="bullet-list-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-                <span class="tooltip-text">Bullet list</span>
+            <button class="backstage-nav-item" onclick="closeDocument()">
+                <span class="icon">❌</span>Close
             </button>
-            
-            <button class="toolbar-btn tooltip" id="number-list-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                </svg>
-                <span class="tooltip-text">Numbered list</span>
+            <button class="backstage-nav-item" onclick="accountSettings()">
+                <span class="icon">👤</span>Account
             </button>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Indentation -->
-            <button class="toolbar-btn tooltip" id="indent-decrease-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
-                </svg>
-                <span class="tooltip-text">Decrease indent</span>
+            <button class="backstage-nav-item" onclick="optionsSettings()">
+                <span class="icon">⚙️</span>Options
             </button>
-            
-            <button class="toolbar-btn tooltip" id="indent-increase-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-                <span class="tooltip-text">Increase indent</span>
-            </button>
-            
-            <div class="h-6 border-r border-gray-300 mx-2"></div>
-            
-            <!-- Text Color and Highlight -->
-            <div class="relative">
-                <button class="toolbar-btn tooltip flex items-center" id="text-color-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                    </svg>
-                    <div class="w-2 h-2 bg-black rounded-full ml-1"></div>
-                    <span class="tooltip-text">Text color</span>
-                </button>
-            </div>
-            
-            <div class="relative">
-                <button class="toolbar-btn tooltip flex items-center" id="highlight-color-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                    </svg>
-                    <div class="w-2 h-2 bg-yellow-300 rounded-full ml-1"></div>
-                    <span class="tooltip-text">Highlight color</span>
-                </button>
+        </div>
+        <div class="backstage-content">
+            <h2>Recent Documents</h2>
+            <p>Your recent documents will appear here.</p>
+            <div id="backstage-content-area">
+                <h3>Create New Document</h3>
+                <button onclick="newDocument(); closeBackstage();" style="padding: 10px 20px; margin: 10px; background: white; color: #0078d4; border: 1px solid #0078d4; cursor: pointer;">Blank Document</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 overflow-auto bg-gray-100 p-8">
-        <div class="editor-content" id="editor" contenteditable="true">
-            <h1 class="text-3xl font-bold mb-4">Welcome to Babbl Docs</h1>
-            <p class="mb-4">This is your new document. Start typing to add content.</p>
-            <p class="mb-4">Babbl Docs provides a beautiful and intuitive interface for all your document editing needs. Create professional documents, reports, and more with our powerful editing tools.</p>
-            <h2 class="text-2xl font-bold mb-3 mt-6">Key Features:</h2>
-            <ul class="list-disc pl-8 mb-4">
-                <li class="mb-2">Clean, distraction-free writing environment</li>
-                <li class="mb-2">Powerful formatting tools</li>
-                <li class="mb-2">Real-time collaboration</li>
-                <li class="mb-2">Smart templates</li>
-                <li class="mb-2">Seamless integration with other Babbl products</li>
-            </ul>
-            <p class="mb-4">Try formatting this text using the toolbar above. You can make text <strong>bold</strong>, <em>italic</em>, or <u>underlined</u>. You can also create lists, adjust alignment, and more.</p>
-            <p>Need help? Click on the "Help" menu to access our comprehensive documentation and support resources.</p>
+    <!-- Ribbon -->
+    <div class="ribbon">
+        <div class="ribbon-tabs">
+            <button class="file-tab" onclick="openBackstage()">FILE</button>
+            <button class="ribbon-tab active" onclick="switchTab('home')">HOME</button>
+            <button class="ribbon-tab" onclick="switchTab('insert')">INSERT</button>
+            <button class="ribbon-tab" onclick="switchTab('design')">DESIGN</button>
+            <button class="ribbon-tab" onclick="switchTab('layout')">PAGE LAYOUT</button>
+            <button class="ribbon-tab" onclick="switchTab('references')">REFERENCES</button>
+            <button class="ribbon-tab" onclick="switchTab('mailings')">MAILINGS</button>
+            <button class="ribbon-tab" onclick="switchTab('review')">REVIEW</button>
+            <button class="ribbon-tab" onclick="switchTab('view')">VIEW</button>
+        </div>
+
+        <!-- HOME TAB -->
+        <div class="ribbon-content active" id="home-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="formatText('cut')">
+                        <span class="icon">✂️</span>Cut
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('copy')">
+                        <span class="icon">📋</span>Copy
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('paste')">
+                        <span class="icon">📄</span>Paste
+                    </button>
+                    <button class="ribbon-btn" onclick="formatPainter()">
+                        <span class="icon">🖌️</span>Format Painter
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Clipboard</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <select class="font-selector" onchange="changeFont(this.value)">
+                        <option value="Calibri">Calibri</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Comic Sans MS">Comic Sans MS</option>
+                        <option value="Impact">Impact</option>
+                        <option value="Trebuchet MS">Trebuchet MS</option>
+                        <option value="Courier New">Courier New</option>
+                    </select>
+                    <input type="number" class="font-size" value="11" min="8" max="72" onchange="changeFontSize(this.value)">
+                </div>
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="formatText('bold')" id="bold-btn">
+                        <span class="icon"><strong>B</strong></span>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('italic')" id="italic-btn">
+                        <span class="icon"><em>I</em></span>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('underline')" id="underline-btn">
+                        <span class="icon"><u>U</u></span>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('strikeThrough')">
+                        <span class="icon">S̶</span>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('subscript')">
+                        <span class="icon">X₂</span>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('superscript')">
+                        <span class="icon">X²</span>
+                    </button>
+                    <input type="color" class="color-picker" onchange="changeFontColor(this.value)" title="Font Color">
+                    <input type="color" class="color-picker" onchange="highlightText(this.value)" title="Highlight" value="#ffff00">
+                </div>
+                <div class="ribbon-group-label">Font</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertList('ul')">
+                        <span class="icon">•</span>Bullets
+                    </button>
+                    <button class="ribbon-btn" onclick="insertList('ol')">
+                        <span class="icon">1.</span>Numbering
+                    </button>
+                    <button class="ribbon-btn" onclick="decreaseIndent()">
+                        <span class="icon">⬅️</span>Decrease
+                    </button>
+                    <button class="ribbon-btn" onclick="increaseIndent()">
+                        <span class="icon">➡️</span>Increase
+                    </button>
+                </div>
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="alignText('left')" id="align-left">
+                        <span class="icon">⬅️</span>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('center')" id="align-center">
+                        <span class="icon">⬌</span>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('right')" id="align-right">
+                        <span class="icon">➡️</span>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('justify')" id="align-justify">
+                        <span class="icon">⬍</span>
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📏</span>Line Spacing ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setLineSpacing(1.0)">1.0</a>
+                            <a href="#" onclick="setLineSpacing(1.15)">1.15</a>
+                            <a href="#" onclick="setLineSpacing(1.5)">1.5</a>
+                            <a href="#" onclick="setLineSpacing(2.0)">2.0</a>
+                            <a href="#" onclick="setLineSpacing(2.5)">2.5</a>
+                            <a href="#" onclick="setLineSpacing(3.0)">3.0</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Paragraph</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🎨</span>Styles ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="applyStyle('normal')">Normal</a>
+                            <a href="#" onclick="applyStyle('heading1')">Heading 1</a>
+                            <a href="#" onclick="applyStyle('heading2')">Heading 2</a>
+                            <a href="#" onclick="applyStyle('heading3')">Heading 3</a>
+                            <a href="#" onclick="applyStyle('title')">Title</a>
+                            <a href="#" onclick="applyStyle('subtitle')">Subtitle</a>
+                            <a href="#" onclick="applyStyle('quote')">Quote</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="clearFormatting()">
+                        <span class="icon">🧹</span>Clear
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Styles</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="findText()">
+                        <span class="icon">🔍</span>Find
+                    </button>
+                    <button class="ribbon-btn" onclick="replaceText()">
+                        <span class="icon">🔄</span>Replace
+                    </button>
+                    <button class="ribbon-btn" onclick="selectAll()">
+                        <span class="icon">📄</span>Select All
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Editing</div>
+            </div>
+        </div>
+
+        <!-- INSERT TAB -->
+        <div class="ribbon-content" id="insert-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn large" onclick="insertCoverPage()">
+                        <span class="icon">📄</span><br>Cover Page
+                    </button>
+                    <button class="ribbon-btn large" onclick="insertBlankPage()">
+                        <span class="icon">📃</span><br>Blank Page
+                    </button>
+                    <button class="ribbon-btn large" onclick="insertPageBreak()">
+                        <span class="icon">📄</span><br>Page Break
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Pages</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn large" onclick="toggleDropdown(this)">
+                            <span class="icon">📊</span><br>Table ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertTable(2, 2)">2x2 Table</a>
+                            <a href="#" onclick="insertTable(3, 3)">3x3 Table</a>
+                            <a href="#" onclick="insertTable(4, 4)">4x4 Table</a>
+                            <a href="#" onclick="insertTable(5, 5)">5x5 Table</a>
+                            <a href="#" onclick="insertCustomTable()">Custom Table</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Tables</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertPicture()">
+                        <span class="icon">🖼️</span>Picture
+                    </button>
+                    <button class="ribbon-btn" onclick="insertOnlinePicture()">
+                        <span class="icon">🌐</span>Online
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔷</span>Shapes ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertShape('rectangle')">Rectangle</a>
+                            <a href="#" onclick="insertShape('circle')">Circle</a>
+                            <a href="#" onclick="insertShape('triangle')">Triangle</a>
+                            <a href="#" onclick="insertShape('arrow')">Arrow</a>
+                            <a href="#" onclick="insertShape('star')">Star</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="insertSmartArt()">
+                        <span class="icon">📊</span>SmartArt
+                    </button>
+                    <button class="ribbon-btn" onclick="insertChart()">
+                        <span class="icon">📈</span>Chart
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Illustrations</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertHyperlink()">
+                        <span class="icon">🔗</span>Hyperlink
+                    </button>
+                    <button class="ribbon-btn" onclick="insertBookmark()">
+                        <span class="icon">🔖</span>Bookmark
+                    </button>
+                    <button class="ribbon-btn" onclick="insertCrossReference()">
+                        <span class="icon">↗️</span>Cross-ref
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Links</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertHeader()">
+                        <span class="icon">📄</span>Header
+                    </button>
+                    <button class="ribbon-btn" onclick="insertFooter()">
+                        <span class="icon">📄</span>Footer
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔢</span>Page # ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertPageNumber('top')">Top of Page</a>
+                            <a href="#" onclick="insertPageNumber('bottom')">Bottom of Page</a>
+                            <a href="#" onclick="insertPageNumber('margins')">Page Margins</a>
+                            <a href="#" onclick="insertPageNumber('current')">Current Position</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Header & Footer</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertTextBox()">
+                        <span class="icon">📝</span>Text Box
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">⚡</span>Quick Parts ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertDocProperty()">Document Property</a>
+                            <a href="#" onclick="insertField()">Field</a>
+                            <a href="#" onclick="insertAutoText()">AutoText</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="insertWordArt()">
+                        <span class="icon">🎨</span>WordArt
+                    </button>
+                    <button class="ribbon-btn" onclick="insertDateTime()">
+                        <span class="icon">📅</span>Date
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📦</span>Object ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertExcelSheet()">Excel Worksheet</a>
+                            <a href="#" onclick="insertPackage()">Package</a>
+                            <a href="#" onclick="insertEquation()">Equation</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Text</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertSymbol()">
+                        <span class="icon">Ω</span>Symbol
+                    </button>
+                    <button class="ribbon-btn" onclick="insertEquation()">
+                        <span class="icon">∑</span>Equation
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Symbols</div>
+            </div>
+        </div>
+
+        <!-- DESIGN TAB -->
+        <div class="ribbon-content" id="design-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🎨</span>Themes ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="applyTheme('office')">Office</a>
+                            <a href="#" onclick="applyTheme('facet')">Facet</a>
+                            <a href="#" onclick="applyTheme('integral')">Integral</a>
+                            <a href="#" onclick="applyTheme('ion')">Ion</a>
+                            <a href="#" onclick="applyTheme('retrospect')">Retrospect</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🌈</span>Colors ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="applyColorScheme('blue')">Blue</a>
+                            <a href="#" onclick="applyColorScheme('red')">Red</a>
+                            <a href="#" onclick="applyColorScheme('green')">Green</a>
+                            <a href="#" onclick="applyColorScheme('orange')">Orange</a>
+                            <a href="#" onclick="applyColorScheme('purple')">Purple</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔤</span>Fonts ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="applyFontScheme('calibri')">Calibri</a>
+                            <a href="#" onclick="applyFontScheme('cambria')">Cambria</a>
+                            <a href="#" onclick="applyFontScheme('arial')">Arial</a>
+                            <a href="#" onclick="applyFontScheme('times')">Times New Roman</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📏</span>Spacing ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setParagraphSpacing('compact')">Compact</a>
+                            <a href="#" onclick="setParagraphSpacing('tight')">Tight</a>
+                            <a href="#" onclick="setParagraphSpacing('open')">Open</a>
+                            <a href="#" onclick="setParagraphSpacing('relaxed')">Relaxed</a>
+                            <a href="#" onclick="setParagraphSpacing('double')">Double</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Document Formatting</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">💧</span>Watermark ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertTextWatermark()">Text Watermark</a>
+                            <a href="#" onclick="insertPictureWatermark()">Picture Watermark</a>
+                            <a href="#" onclick="removeWatermark()">Remove Watermark</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="changePageColor()">
+                        <span class="icon">🎨</span>Page Color
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🖼️</span>Borders ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="addPageBorder('box')">Box</a>
+                            <a href="#" onclick="addPageBorder('shadow')">Shadow</a>
+                            <a href="#" onclick="addPageBorder('3d')">3-D</a>
+                            <a href="#" onclick="addPageBorder('custom')">Custom</a>
+                            <a href="#" onclick="removePageBorder()">No Border</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Page Background</div>
+            </div>
+        </div>
+
+        <!-- PAGE LAYOUT TAB -->
+        <div class="ribbon-content" id="layout-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📏</span>Margins ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setMargins('normal')">Normal (1")</a>
+                            <a href="#" onclick="setMargins('narrow')">Narrow (0.5")</a>
+                            <a href="#" onclick="setMargins('moderate')">Moderate (0.75")</a>
+                            <a href="#" onclick="setMargins('wide')">Wide (2")</a>
+                            <a href="#" onclick="setMargins('custom')">Custom Margins</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="changeOrientation()">
+                        <span class="icon">📄</span>Orientation
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📐</span>Size ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setPaperSize('letter')">Letter (8.5" x 11")</a>
+                            <a href="#" onclick="setPaperSize('a4')">A4 (8.27" x 11.69")</a>
+                            <a href="#" onclick="setPaperSize('legal')">Legal (8.5" x 14")</a>
+                            <a href="#" onclick="setPaperSize('a3')">A3 (11.69" x 16.54")</a>
+                            <a href="#" onclick="setPaperSize('a5')">A5 (5.83" x 8.27")</a>
+                            <a href="#" onclick="setPaperSize('tabloid')">Tabloid (11" x 17")</a>
+                            <a href="#" onclick="setPaperSize('executive')">Executive (7.25" x 10.5")</a>
+                            <a href="#" onclick="setPaperSize('b4')">B4 (9.84" x 13.9")</a>
+                            <a href="#" onclick="setPaperSize('b5')">B5 (6.93" x 9.84")</a>
+                            <a href="#" onclick="setPaperSize('custom')">Custom Size</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📰</span>Columns ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setColumns(1)">One</a>
+                            <a href="#" onclick="setColumns(2)">Two</a>
+                            <a href="#" onclick="setColumns(3)">Three</a>
+                            <a href="#" onclick="setColumns(4)">Four</a>
+                            <a href="#" onclick="setColumns('left')">Left</a>
+                            <a href="#" onclick="setColumns('right')">Right</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📄</span>Breaks ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertPageBreak()">Page Break</a>
+                            <a href="#" onclick="insertColumnBreak()">Column Break</a>
+                            <a href="#" onclick="insertSectionBreak('next')">Next Page</a>
+                            <a href="#" onclick="insertSectionBreak('continuous')">Continuous</a>
+                            <a href="#" onclick="insertSectionBreak('even')">Even Page</a>
+                            <a href="#" onclick="insertSectionBreak('odd')">Odd Page</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔢</span>Line Numbers ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setLineNumbers('none')">None</a>
+                            <a href="#" onclick="setLineNumbers('continuous')">Continuous</a>
+                            <a href="#" onclick="setLineNumbers('restart-page')">Restart Each Page</a>
+                            <a href="#" onclick="setLineNumbers('restart-section')">Restart Each Section</a>
+                            <a href="#" onclick="setLineNumbers('suppress')">Suppress for Current Paragraph</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔤</span>Hyphenation ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setHyphenation('none')">None</a>
+                            <a href="#" onclick="setHyphenation('auto')">Automatic</a>
+                            <a href="#" onclick="setHyphenation('manual')">Manual</a>
+                            <a href="#" onclick="setHyphenation('options')">Hyphenation Options</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Page Setup</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="adjustIndent('increase')">
+                        <span class="icon">➡️</span>Indent
+                    </button>
+                    <button class="ribbon-btn" onclick="adjustIndent('decrease')">
+                        <span class="icon">⬅️</span>Outdent
+                    </button>
+                    <button class="ribbon-btn" onclick="adjustSpacing()">
+                        <span class="icon">📏</span>Spacing
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Paragraph</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="bringToFront()">
+                        <span class="icon">⬆️</span>Bring Forward
+                    </button>
+                    <button class="ribbon-btn" onclick="sendToBack()">
+                        <span class="icon">⬇️</span>Send Backward
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔄</span>Wrap Text ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setTextWrap('inline')">In Line with Text</a>
+                            <a href="#" onclick="setTextWrap('square')">Square</a>
+                            <a href="#" onclick="setTextWrap('tight')">Tight</a>
+                            <a href="#" onclick="setTextWrap('through')">Through</a>
+                            <a href="#" onclick="setTextWrap('top-bottom')">Top and Bottom</a>
+                            <a href="#" onclick="setTextWrap('behind')">Behind Text</a>
+                            <a href="#" onclick="setTextWrap('front')">In Front of Text</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📐</span>Align ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="alignObject('left')">Align Left</a>
+                            <a href="#" onclick="alignObject('center')">Align Center</a>
+                            <a href="#" onclick="alignObject('right')">Align Right</a>
+                            <a href="#" onclick="alignObject('top')">Align Top</a>
+                            <a href="#" onclick="alignObject('middle')">Align Middle</a>
+                            <a href="#" onclick="alignObject('bottom')">Align Bottom</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Arrange</div>
+            </div>
+        </div>
+
+        <!-- REFERENCES TAB -->
+        <div class="ribbon-content" id="references-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📋</span>Table of Contents ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertTOC('automatic1')">Automatic Table 1</a>
+                            <a href="#" onclick="insertTOC('automatic2')">Automatic Table 2</a>
+                            <a href="#" onclick="insertTOC('manual')">Manual Table</a>
+                            <a href="#" onclick="insertTOC('custom')">Custom Table of Contents</a>
+                            <a href="#" onclick="updateTOC()">Update Table</a>
+                            <a href="#" onclick="removeTOC()">Remove Table of Contents</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Table of Contents</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertFootnote()">
+                        <span class="icon">📝</span>Insert Footnote
+                    </button>
+                    <button class="ribbon-btn" onclick="insertEndnote()">
+                        <span class="icon">📄</span>Insert Endnote
+                    </button>
+                    <button class="ribbon-btn" onclick="nextFootnote()">
+                        <span class="icon">➡️</span>Next Footnote
+                    </button>
+                    <button class="ribbon-btn" onclick="showNotes()">
+                        <span class="icon">👁️</span>Show Notes
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Footnotes</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📚</span>Insert Citation ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertCitation('book')">Add New Source - Book</a>
+                            <a href="#" onclick="insertCitation('journal')">Add New Source - Journal Article</a>
+                            <a href="#" onclick="insertCitation('website')">Add New Source - Website</a>
+                            <a href="#" onclick="insertCitation('report')">Add New Source - Report</a>
+                            <a href="#" onclick="insertCitation('conference')">Add New Source - Conference</a>
+                            <a href="#" onclick="insertCitation('existing')">Insert Existing Citation</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="manageSources()">
+                        <span class="icon">📝</span>Manage Sources
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📖</span>Bibliography ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertBibliography('bibliography')">Bibliography</a>
+                            <a href="#" onclick="insertBibliography('works-cited')">Works Cited</a>
+                            <a href="#" onclick="insertBibliography('references')">References</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🎓</span>Style ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setCitationStyle('apa')">APA</a>
+                            <a href="#" onclick="setCitationStyle('mla')">MLA</a>
+                            <a href="#" onclick="setCitationStyle('chicago')">Chicago</a>
+                            <a href="#" onclick="setCitationStyle('turabian')">Turabian</a>
+                            <a href="#" onclick="setCitationStyle('ieee')">IEEE</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Citations & Bibliography</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertCaption()">
+                        <span class="icon">🏷️</span>Insert Caption
+                    </button>
+                    <button class="ribbon-btn" onclick="insertTableOfFigures()">
+                        <span class="icon">📊</span>Insert Table of Figures
+                    </button>
+                    <button class="ribbon-btn" onclick="updateTable()">
+                        <span class="icon">🔄</span>Update Table
+                    </button>
+                    <button class="ribbon-btn" onclick="crossReference()">
+                        <span class="icon">↗️</span>Cross-reference
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Captions</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="markIndexEntry()">
+                        <span class="icon">📑</span>Mark Entry
+                    </button>
+                    <button class="ribbon-btn" onclick="insertIndex()">
+                        <span class="icon">📚</span>Insert Index
+                    </button>
+                    <button class="ribbon-btn" onclick="updateIndex()">
+                        <span class="icon">🔄</span>Update Index
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Index</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="markTableOfAuthorities()">
+                        <span class="icon">⚖️</span>Mark Citation
+                    </button>
+                    <button class="ribbon-btn" onclick="insertTableOfAuthorities()">
+                        <span class="icon">📋</span>Insert Table of Authorities
+                    </button>
+                    <button class="ribbon-btn" onclick="updateTableOfAuthorities()">
+                        <span class="icon">🔄</span>Update Table
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Table of Authorities</div>
+            </div>
+        </div>
+
+        <!-- MAILINGS TAB -->
+        <div class="ribbon-content" id="mailings-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="createEnvelopes()">
+                        <span class="icon">✉️</span>Envelopes
+                    </button>
+                    <button class="ribbon-btn" onclick="createLabels()">
+                        <span class="icon">🏷️</span>Labels
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Create</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📧</span>Start Mail Merge ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="startMailMerge('letters')">Letters</a>
+                            <a href="#" onclick="startMailMerge('email')">E-mail Messages</a>
+                            <a href="#" onclick="startMailMerge('envelopes')">Envelopes</a>
+                            <a href="#" onclick="startMailMerge('labels')">Labels</a>
+                            <a href="#" onclick="startMailMerge('directory')">Directory</a>
+                            <a href="#" onclick="startMailMerge('normal')">Normal Word Document</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">👥</span>Select Recipients ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="selectRecipients('existing')">Use Existing List</a>
+                            <a href="#" onclick="selectRecipients('contacts')">Select from Outlook Contacts</a>
+                            <a href="#" onclick="selectRecipients('new')">Type New List</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="editRecipientList()">
+                        <span class="icon">✏️</span>Edit Recipient List
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Start Mail Merge</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="highlightMergeFields()">
+                        <span class="icon">🔍</span>Highlight Merge Fields
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📝</span>Insert Merge Field ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertMergeField('firstname')">First Name</a>
+                            <a href="#" onclick="insertMergeField('lastname')">Last Name</a>
+                            <a href="#" onclick="insertMergeField('company')">Company</a>
+                            <a href="#" onclick="insertMergeField('address')">Address</a>
+                            <a href="#" onclick="insertMergeField('city')">City</a>
+                            <a href="#" onclick="insertMergeField('state')">State</a>
+                            <a href="#" onclick="insertMergeField('zipcode')">ZIP Code</a>
+                            <a href="#" onclick="insertMergeField('custom')">More Items...</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="insertAddressBlock()">
+                        <span class="icon">🏠</span>Address Block
+                    </button>
+                    <button class="ribbon-btn" onclick="insertGreetingLine()">
+                        <span class="icon">👋</span>Greeting Line
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">⚡</span>Rules ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="insertRule('if')">If...Then...Else...</a>
+                            <a href="#" onclick="insertRule('next-record')">Next Record</a>
+                            <a href="#" onclick="insertRule('next-record-if')">Next Record If...</a>
+                            <a href="#" onclick="insertRule('skip-record')">Skip Record If...</a>
+                            <a href="#" onclick="insertRule('merge-record')">Merge Record #</a>
+                            <a href="#" onclick="insertRule('merge-sequence')">Merge Sequence #</a>
+                            <a href="#" onclick="insertRule('set-bookmark')">Set Bookmark...</a>
+                            <a href="#" onclick="insertRule('ask')">Ask...</a>
+                            <a href="#" onclick="insertRule('fill-in')">Fill-in...</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="matchFields()">
+                        <span class="icon">🔗</span>Match Fields
+                    </button>
+                    <button class="ribbon-btn" onclick="updateLabels()">
+                        <span class="icon">🔄</span>Update Labels
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Write & Insert Fields</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="previewResults()">
+                        <span class="icon">👁️</span>Preview Results
+                    </button>
+                    <button class="ribbon-btn" onclick="findRecipient()">
+                        <span class="icon">🔍</span>Find Recipient
+                    </button>
+                    <button class="ribbon-btn" onclick="checkForErrors()">
+                        <span class="icon">✅</span>Auto Check for Errors
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Preview Results</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">✅</span>Finish & Merge ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="finishMerge('edit')">Edit Individual Documents...</a>
+                            <a href="#" onclick="finishMerge('print')">Print Documents...</a>
+                            <a href="#" onclick="finishMerge('email')">Send E-mail Messages...</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Finish</div>
+            </div>
+        </div>
+
+        <!-- REVIEW TAB -->
+        <div class="ribbon-content" id="review-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">✓</span>Spelling & Grammar ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="spellCheck()">Spelling & Grammar</a>
+                            <a href="#" onclick="setProofingLanguage()">Set Proofing Language</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="openThesaurus()">
+                        <span class="icon">📖</span>Thesaurus
+                    </button>
+                    <button class="ribbon-btn" onclick="wordCount()">
+                        <span class="icon">🔢</span>Word Count
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Proofing</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🌐</span>Translate ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="translateText('selection')">Translate Selected Text</a>
+                            <a href="#" onclick="translateText('document')">Translate Document</a>
+                            <a href="#" onclick="translateText('mini')">Mini Translator</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🗣️</span>Language ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setLanguage('english')">English (United States)</a>
+                            <a href="#" onclick="setLanguage('spanish')">Spanish</a>
+                            <a href="#" onclick="setLanguage('french')">French</a>
+                            <a href="#" onclick="setLanguage('german')">German</a>
+                            <a href="#" onclick="setLanguage('more')">Set Proofing Language...</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Language</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="insertComment()">
+                        <span class="icon">💬</span>New Comment
+                    </button>
+                    <button class="ribbon-btn" onclick="deleteComment()">
+                        <span class="icon">🗑️</span>Delete
+                    </button>
+                    <button class="ribbon-btn" onclick="previousComment()">
+                        <span class="icon">⬅️</span>Previous
+                    </button>
+                    <button class="ribbon-btn" onclick="nextComment()">
+                        <span class="icon">➡️</span>Next
+                    </button>
+                    <button class="ribbon-btn" onclick="showComments()">
+                        <span class="icon">👁️</span>Show Comments
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Comments</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">📝</span>Track Changes ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="toggleTrackChanges()">Track Changes</a>
+                            <a href="#" onclick="changeTrackingOptions()">Change Tracking Options</a>
+                            <a href="#" onclick="changeUserName()">Change User Name</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">👁️</span>Display for Review ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="setDisplayMode('simple')">Simple Markup</a>
+                            <a href="#" onclick="setDisplayMode('all')">All Markup</a>
+                            <a href="#" onclick="setDisplayMode('no')">No Markup</a>
+                            <a href="#" onclick="setDisplayMode('original')">Original</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">👁️</span>Show Markup ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="toggleMarkup('comments')">Comments</a>
+                            <a href="#" onclick="toggleMarkup('insertions')">Insertions and Deletions</a>
+                            <a href="#" onclick="toggleMarkup('formatting')">Formatting</a>
+                            <a href="#" onclick="toggleMarkup('balloons')">Balloons</a>
+                            <a href="#" onclick="toggleMarkup('reviewers')">Specific People</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="reviewingPane()">
+                        <span class="icon">📄</span>Reviewing Pane
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Tracking</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">✅</span>Accept ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="acceptChange('current')">Accept and Move to Next</a>
+                            <a href="#" onclick="acceptChange('all')">Accept All Changes</a>
+                            <a href="#" onclick="acceptChange('all-shown')">Accept All Changes Shown</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">❌</span>Reject ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="rejectChange('current')">Reject and Move to Next</a>
+                            <a href="#" onclick="rejectChange('all')">Reject All Changes</a>
+                            <a href="#" onclick="rejectChange('all-shown')">Reject All Changes Shown</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="previousChange()">
+                        <span class="icon">⬅️</span>Previous
+                    </button>
+                    <button class="ribbon-btn" onclick="nextChange()">
+                        <span class="icon">➡️</span>Next
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Changes</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">⚖️</span>Compare ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="compareDocuments()">Compare...</a>
+                            <a href="#" onclick="showSourceDocuments()">Show Source Documents</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔗</span>Combine ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="combineDocuments()">Combine...</a>
+                            <a href="#" onclick="showSourceDocuments()">Show Source Documents</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Compare</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔒</span>Restrict Editing ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="restrictEditing('formatting')">Limit Formatting to a Selection of Styles</a>
+                            <a href="#" onclick="restrictEditing('editing')">Allow Only This Type of Editing in the Document</a>
+                            <a href="#" onclick="restrictEditing('password')">Start Enforcing Protection</a>
+                        </div>
+                    </div>
+                    <button class="ribbon-btn" onclick="blockAuthors()">
+                        <span class="icon">🚫</span>Block Authors
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Protect</div>
+            </div>
+        </div>
+
+        <!-- VIEW TAB -->
+        <div class="ribbon-content" id="view-content">
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="setView('read')" id="read-mode">
+                        <span class="icon">📖</span>Read Mode
+                    </button>
+                    <button class="ribbon-btn active" onclick="setView('print')" id="print-layout">
+                        <span class="icon">📄</span>Print Layout
+                    </button>
+                    <button class="ribbon-btn" onclick="setView('web')" id="web-layout">
+                        <span class="icon">🌐</span>Web Layout
+                    </button>
+                    <button class="ribbon-btn" onclick="setView('outline')" id="outline-view">
+                        <span class="icon">📋</span>Outline
+                    </button>
+                    <button class="ribbon-btn" onclick="setView('draft')" id="draft-view">
+                        <span class="icon">📝</span>Draft
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Views</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="toggleRuler()" id="ruler-btn">
+                        <span class="icon">📏</span>Ruler
+                    </button>
+                    <button class="ribbon-btn" onclick="toggleGridlines()" id="gridlines-btn">
+                        <span class="icon">⊞</span>Gridlines
+                    </button>
+                    <button class="ribbon-btn" onclick="toggleNavigationPane()" id="nav-pane-btn">
+                        <span class="icon">🧭</span>Navigation Pane
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Show</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="zoomDialog()">
+                        <span class="icon">🔍</span>Zoom
+                    </button>
+                    <button class="ribbon-btn" onclick="setZoom(100)">
+                        <span class="icon">💯</span>100%
+                    </button>
+                    <button class="ribbon-btn" onclick="onePage()">
+                        <span class="icon">📄</span>One Page
+                    </button>
+                    <button class="ribbon-btn" onclick="multiplePages()">
+                        <span class="icon">📄📄</span>Multiple Pages
+                    </button>
+                    <button class="ribbon-btn" onclick="pageWidth()">
+                        <span class="icon">↔️</span>Page Width
+                    </button>
+                </div>
+                <div class="ribbon-group-label">Zoom</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <button class="ribbon-btn" onclick="newWindow()">
+                        <span class="icon">🪟</span>New Window
+                    </button>
+                    <button class="ribbon-btn" onclick="arrangeAll()">
+                        <span class="icon">📐</span>Arrange All
+                    </button>
+                    <button class="ribbon-btn" onclick="splitWindow()">
+                        <span class="icon">📐</span>Split
+                    </button>
+                    <button class="ribbon-btn" onclick="viewSideBySide()">
+                        <span class="icon">👥</span>View Side by Side
+                    </button>
+                    <button class="ribbon-btn" onclick="syncScrolling()">
+                        <span class="icon">🔄</span>Synchronous Scrolling
+                    </button>
+                    <button class="ribbon-btn" onclick="resetWindowPosition()">
+                        <span class="icon">🔄</span>Reset Window Position
+                    </button>
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">🔄</span>Switch Windows ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="switchToWindow(1)">1 Document1 - Babbl Docs</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Window</div>
+            </div>
+
+            <div class="ribbon-group">
+                <div class="ribbon-buttons">
+                    <div class="dropdown">
+                        <button class="ribbon-btn" onclick="toggleDropdown(this)">
+                            <span class="icon">⏺️</span>Macros ▼
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="#" onclick="viewMacros()">View Macros</a>
+                            <a href="#" onclick="recordMacro()">Record Macro</a>
+                            <a href="#" onclick="pauseRecording()">Pause Recording</a>
+                            <a href="#" onclick="macroSecurity()">Macro Security</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ribbon-group-label">Macros</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Container -->
+    <div class="document-container" id="document-container">
+        <div class="document-page paper-letter" contenteditable="true" id="page-1" onkeyup="handleTyping(event)" onclick="updateStatus()" onpaste="handlePaste(event)">
+            <div class="page-number">Page 1</div>
+            <p>Start typing your document here...</p>
         </div>
     </div>
 
     <!-- Status Bar -->
-    <div class="bg-white border-t border-gray-200 py-2 px-4 flex justify-between items-center text-sm text-gray-600">
-        <div class="flex items-center space-x-4">
-            <span>Page 1 of 1</span>
-            <span>Words: 112</span>
+    <div class="status-bar">
+        <div>
+            <span id="word-count">Words: 6</span> | 
+            <span id="page-info">Page 1 of 1</span> |
+            <span id="language">English (United States)</span> |
+            <span id="zoom-info">Zoom: 100%</span>
         </div>
-        <div class="flex items-center space-x-4">
-            <span>Last edit was 2 minutes ago</span>
-            <span>All changes saved</span>
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomOut()">−</button>
+            <input type="range" class="zoom-slider" min="50" max="200" value="100" onchange="setZoom(this.value)" oninput="setZoom(this.value)">
+            <button class="zoom-btn" onclick="zoomIn()">+</button>
+            <span id="zoom-level">100%</span>
         </div>
     </div>
 
     <script>
+        // Global variables
+        let currentZoom = 100;
+        let undoStack = [];
+        let redoStack = [];
+        let trackChanges = false;
+        let pageCount = 1;
+        let currentPaperSize = 'letter';
+        let formatPainterActive = false;
+        let copiedFormat = null;
+
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            // Document title input focus effect
-            const documentTitle = document.getElementById('document-title');
-            const titleUnderline = document.getElementById('title-underline');
-            
-            documentTitle.addEventListener('focus', function() {
-                titleUnderline.classList.add('scale-x-100');
-            });
-            
-            documentTitle.addEventListener('blur', function() {
-                titleUnderline.classList.remove('scale-x-100');
-            });
-            
-            // Text formatting buttons
-            const boldBtn = document.getElementById('bold-btn');
-            const italicBtn = document.getElementById('italic-btn');
-            const underlineBtn = document.getElementById('underline-btn');
-            const alignLeftBtn = document.getElementById('align-left-btn');
-            const alignCenterBtn = document.getElementById('align-center-btn');
-            const alignRightBtn = document.getElementById('align-right-btn');
-            const alignJustifyBtn = document.getElementById('align-justify-btn');
-            const bulletListBtn = document.getElementById('bullet-list-btn');
-            const numberListBtn = document.getElementById('number-list-btn');
-            const indentDecreaseBtn = document.getElementById('indent-decrease-btn');
-            const indentIncreaseBtn = document.getElementById('indent-increase-btn');
-            
-            // Text formatting functions
-            boldBtn.addEventListener('click', function() {
-                document.execCommand('bold', false, null);
-                this.classList.toggle('active');
-            });
-            
-            italicBtn.addEventListener('click', function() {
-                document.execCommand('italic', false, null);
-                this.classList.toggle('active');
-            });
-            
-            underlineBtn.addEventListener('click', function() {
-                document.execCommand('underline', false, null);
-                this.classList.toggle('active');
-            });
-            
-            alignLeftBtn.addEventListener('click', function() {
-                document.execCommand('justifyLeft', false, null);
-                resetAlignButtons();
-                this.classList.add('active');
-            });
-            
-            alignCenterBtn.addEventListener('click', function() {
-                document.execCommand('justifyCenter', false, null);
-                resetAlignButtons();
-                this.classList.add('active');
-            });
-            
-            alignRightBtn.addEventListener('click', function() {
-                document.execCommand('justifyRight', false, null);
-                resetAlignButtons();
-                this.classList.add('active');
-            });
-            
-            alignJustifyBtn.addEventListener('click', function() {
-                document.execCommand('justifyFull', false, null);
-                resetAlignButtons();
-                this.classList.add('active');
-            });
-            
-            bulletListBtn.addEventListener('click', function() {
-                document.execCommand('insertUnorderedList', false, null);
-                this.classList.toggle('active');
-            });
-            
-            numberListBtn.addEventListener('click', function() {
-                document.execCommand('insertOrderedList', false, null);
-                this.classList.toggle('active');
-            });
-            
-            indentDecreaseBtn.addEventListener('click', function() {
-                document.execCommand('outdent', false, null);
-            });
-            
-            indentIncreaseBtn.addEventListener('click', function() {
-                document.execCommand('indent', false, null);
-            });
-            
-            function resetAlignButtons() {
-                alignLeftBtn.classList.remove('active');
-                alignCenterBtn.classList.remove('active');
-                alignRightBtn.classList.remove('active');
-                alignJustifyBtn.classList.remove('active');
-            }
-            
-            // Auto-save functionality simulation
-            const editor = document.getElementById('editor');
-            let lastEditTime = new Date();
-            
-            editor.addEventListener('input', function() {
-                lastEditTime = new Date();
-                updateStatusBar();
-                
-                // Simulate auto-save
-                setTimeout(function() {
-                    document.querySelector('.status-bar span:last-child').textContent = 'All changes saved';
-                }, 1500);
-            });
-            
-            function updateStatusBar() {
-                const wordCount = countWords(editor.innerText);
-                document.querySelector('.status-bar span:nth-child(2)').textContent = `Words: ${wordCount}`;
-                document.querySelector('.status-bar span:last-child').textContent = 'Saving...';
-            }
-            
-            function countWords(text) {
-                return text.split(/\s+/).filter(word => word.length > 0).length;
-            }
-            
-            // Add animation to dropdown menus
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            dropdowns.forEach(dropdown => {
-                dropdown.classList.add('animate-fadeIn');
-            });
-            
-            // Make editor focused on load
-            editor.focus();
+            updateStatus();
+            saveState();
+            setupEventListeners();
         });
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96525faa62573c99',t:'MTc1MzUxNjkzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
+
+        function setupEventListeners() {
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown').forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+
+            // Enhanced keyboard shortcuts
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+        }
+
+        function handleKeyboardShortcuts(e) {
+            if (e.ctrlKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'n': e.preventDefault(); newDocument(); break;
+                    case 'o': e.preventDefault(); openDocument(); break;
+                    case 's': e.preventDefault(); saveDocument(); break;
+                    case 'p': e.preventDefault(); printDocument(); break;
+                    case 'b': e.preventDefault(); formatText('bold'); break;
+                    case 'i': e.preventDefault(); formatText('italic'); break;
+                    case 'u': e.preventDefault(); formatText('underline'); break;
+                    case 'a': e.preventDefault(); selectAll(); break;
+                    case 'f': e.preventDefault(); findText(); break;
+                    case 'h': e.preventDefault(); replaceText(); break;
+                    case 'k': e.preventDefault(); insertHyperlink(); break;
+                    case 'g': e.preventDefault(); goToPage(); break;
+                    case 'z': 
+                        e.preventDefault(); 
+                        if (e.shiftKey) {
+                            redo();
+                        } else {
+                            undo();
+                        }
+                        break;
+                    case 'y': e.preventDefault(); redo(); break;
+                    case '[': e.preventDefault(); decreaseFontSize(); break;
+                    case ']': e.preventDefault(); increaseFontSize(); break;
+                    case 'e': e.preventDefault(); alignText('center'); break;
+                    case 'l': e.preventDefault(); alignText('left'); break;
+                    case 'r': e.preventDefault(); alignText('right'); break;
+                    case 'j': e.preventDefault(); alignText('justify'); break;
+                }
+            }
+
+            if (e.ctrlKey && e.shiftKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'n': e.preventDefault(); applyStyle('normal'); break;
+                    case 'l': e.preventDefault(); insertList('ul'); break;
+                    case 'c': e.preventDefault(); copyFormat(); break;
+                    case 'v': e.preventDefault(); pasteFormat(); break;
+                }
+            }
+
+            if (e.ctrlKey && e.altKey) {
+                switch(e.key.toLowerCase()) {
+                    case 'f': e.preventDefault(); insertFootnote(); break;
+                    case 'd': e.preventDefault(); insertEndnote(); break;
+                    case 'm': e.preventDefault(); insertComment(); break;
+                    case '1': e.preventDefault(); applyStyle('heading1'); break;
+                    case '2': e.preventDefault(); applyStyle('heading2'); break;
+                    case '3': e.preventDefault(); applyStyle('heading3'); break;
+                }
+            }
+
+            // Function keys
+            if (e.key === 'F5') {
+                e.preventDefault();
+                goToPage();
+            }
+
+            if (e.key === 'F12') {
+                e.preventDefault();
+                saveAsDocument();
+            }
+
+            if (e.shiftKey && e.key === 'F5') {
+                e.preventDefault();
+                goToLastEdit();
+            }
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.ribbon-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabName + '-content').classList.add('active');
+            
+            document.querySelectorAll('.ribbon-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Backstage functions
+        function openBackstage() {
+            document.getElementById('backstage').classList.add('active');
+        }
+
+        function closeBackstage() {
+            document.getElementById('backstage').classList.remove('active');
+        }
+
+        // Window controls
+        function minimizeWindow() {
+            alert('Window minimized (demo)');
+        }
+
+        function maximizeWindow() {
+            alert('Window maximized (demo)');
+        }
+
+        function closeWindow() {
+            if (confirm('Do you want to save changes to Document1?')) {
+                saveDocument();
+            }
+        }
+
+        // Document functions
+        function newDocument() {
+            if (confirm('Create a new document? Unsaved changes will be lost.')) {
+                document.getElementById('document-container').innerHTML = `
+                    <div class="document-page paper-${currentPaperSize}" contenteditable="true" id="page-1" onkeyup="handleTyping(event)" onclick="updateStatus()" onpaste="handlePaste(event)">
+                        <div class="page-number">Page 1</div>
+                        <p>Start typing your document here...</p>
+                    </div>
+                `;
+                pageCount = 1;
+                updateStatus();
+                saveState();
+            }
+        }
+
+        function openDocument() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt,.html,.doc,.docx';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const content = e.target.result;
+                        getCurrentPage().innerHTML = `<div class="page-number">Page 1</div><p>${content}</p>`;
+                        updateStatus();
+                        saveState();
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function saveDocument() {
+            const content = getAllPagesContent();
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('Document saved successfully!');
+        }
+
+        function saveAsDocument() {
+            const filename = prompt('Enter filename:', 'document.html');
+            if (filename) {
+                const content = getAllPagesContent();
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                alert(`Document saved as ${filename}!`);
+            }
+        }
+
+        function printDocument() {
+            window.print();
+        }
+
+        function shareDocument() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Babbl Docs Document',
+                    text: 'Check out this document created with Babbl Docs',
+                    url: window.location.href
+                });
+            } else {
+                alert('Sharing not supported on this device. Use the browser\'s share feature.');
+            }
+        }
+
+        function exportDocument() {
+            const format = prompt('Export format (html, txt, pdf):', 'html');
+            if (format) {
+                switch(format.toLowerCase()) {
+                    case 'html':
+                        saveDocument();
+                        break;
+                    case 'txt':
+                        exportAsText();
+                        break;
+                    case 'pdf':
+                        alert('PDF export would require additional libraries in a full implementation');
+                        break;
+                    default:
+                        alert('Unsupported format');
+                }
+            }
+        }
+
+        function exportAsText() {
+            const content = getAllPagesText();
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function documentInfo() {
+            const wordCount = getWordCount();
+            const charCount = getCharacterCount();
+            alert(`Document Information:\nPages: ${pageCount}\nWords: ${wordCount}\nCharacters: ${charCount}\nCreated: ${new Date().toLocaleDateString()}`);
+        }
+
+        function closeDocument() {
+            if (confirm('Close document? Unsaved changes will be lost.')) {
+                newDocument();
+            }
+        }
+
+        function accountSettings() {
+            alert('Account settings would open here in full version');
+        }
+
+        function optionsSettings() {
+            alert('Options dialog would open here in full version');
+        }
+
+        // Formatting functions
+        function formatText(command) {
+            if (command === 'cut') {
+                document.execCommand('cut');
+            } else if (command === 'copy') {
+                document.execCommand('copy');
+            } else if (command === 'paste') {
+                document.execCommand('paste');
+            } else {
+                document.execCommand(command, false, null);
+            }
+            updateFormatButtons();
+            saveState();
+        }
+
+        function formatPainter() {
+            if (formatPainterActive) {
+                formatPainterActive = false;
+                document.body.style.cursor = 'default';
+                alert('Format Painter deactivated');
+            } else {
+                copyFormat();
+                formatPainterActive = true;
+                document.body.style.cursor = 'crosshair';
+                alert('Format Painter activated. Click on text to apply formatting.');
+            }
+        }
+
+        function copyFormat() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const element = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                    ? range.commonAncestorContainer.parentElement 
+                    : range.commonAncestorContainer;
+                
+                copiedFormat = {
+                    fontFamily: getComputedStyle(element).fontFamily,
+                    fontSize: getComputedStyle(element).fontSize,
+                    fontWeight: getComputedStyle(element).fontWeight,
+                    fontStyle: getComputedStyle(element).fontStyle,
+                    textDecoration: getComputedStyle(element).textDecoration,
+                    color: getComputedStyle(element).color,
+                    backgroundColor: getComputedStyle(element).backgroundColor
+                };
+            }
+        }
+
+        function pasteFormat() {
+            if (copiedFormat) {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    const span = document.createElement('span');
+                    
+                    Object.assign(span.style, copiedFormat);
+                    
+                    try {
+                        range.surroundContents(span);
+                    } catch (e) {
+                        // Handle complex selections
+                        const contents = range.extractContents();
+                        span.appendChild(contents);
+                        range.insertNode(span);
+                    }
+                    saveState();
+                }
+            }
+        }
+
+        function changeFont(fontFamily) {
+            document.execCommand('fontName', false, fontFamily);
+            saveState();
+        }
+
+        function changeFontSize(size) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0 && selection.toString()) {
+                document.execCommand('fontSize', false, '7');
+                const fontElements = document.querySelectorAll('font[size="7"]');
+                fontElements.forEach(element => {
+                    element.removeAttribute('size');
+                    element.style.fontSize = size + 'pt';
+                });
+            }
+            saveState();
+        }
+
+        function increaseFontSize() {
+            const currentSize = parseInt(document.querySelector('.font-size').value);
+            if (currentSize < 72) {
+                const newSize = currentSize + 1;
+                document.querySelector('.font-size').value = newSize;
+                changeFontSize(newSize);
+            }
+        }
+
+        function decreaseFontSize() {
+            const currentSize = parseInt(document.querySelector('.font-size').value);
+            if (currentSize > 8) {
+                const newSize = currentSize - 1;
+                document.querySelector('.font-size').value = newSize;
+                changeFontSize(newSize);
+            }
+        }
+
+        function changeFontColor(color) {
+            document.execCommand('foreColor', false, color);
+            saveState();
+        }
+
+        function highlightText(color) {
+            document.execCommand('backColor', false, color);
+            saveState();
+        }
+
+        function alignText(alignment) {
+            const alignCommands = {
+                'left': 'justifyLeft',
+                'center': 'justifyCenter',
+                'right': 'justifyRight',
+                'justify': 'justifyFull'
+            };
+            document.execCommand(alignCommands[alignment], false, null);
+            
+            // Update button states
+            document.querySelectorAll('[id^="align-"]').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('align-' + alignment).classList.add('active');
+            
+            saveState();
+        }
+
+        function insertList(type) {
+            const command = type === 'ul' ? 'insertUnorderedList' : 'insertOrderedList';
+            document.execCommand(command, false, null);
+            saveState();
+        }
+
+        function increaseIndent() {
+            document.execCommand('indent', false, null);
+            saveState();
+        }
+
+        function decreaseIndent() {
+            document.execCommand('outdent', false, null);
+            saveState();
+        }
+
+        function setLineSpacing(spacing) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const element = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+                    ? range.commonAncestorContainer.parentElement 
+                    : range.commonAncestorContainer;
+                
+                element.style.lineHeight = spacing;
+                saveState();
+            }
+        }
+
+        function applyStyle(style) {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                const element = document.createElement('span');
+                
+                switch(style) {
+                    case 'heading1':
+                        element.style.fontSize = '18pt';
+                        element.style.fontWeight = 'bold';
+                        element.style.marginBottom = '12pt';
+                        break;
+                    case 'heading2':
+                        element.style.fontSize = '14pt';
+                        element.style.fontWeight = 'bold';
+                        element.style.marginBottom = '10pt';
+                        break;
+                    case 'heading3':
+                        element.style.fontSize = '12pt';
+                        element.style.fontWeight = 'bold';
+                        element.style.marginBottom = '8pt';
+                        break;
+                    case 'title':
+                        element.style.fontSize = '24pt';
+                        element.style.fontWeight = 'bold';
+                        element.style.textAlign = 'center';
+                        element.style.marginBottom = '18pt';
+                        break;
+                    case 'subtitle':
+                        element.style.fontSize = '16pt';
+                        element.style.fontStyle = 'italic';
+                        element.style.textAlign = 'center';
+                        element.style.marginBottom = '12pt';
+                        break;
+                    case 'quote':
+                        element.style.fontStyle = 'italic';
+                        element.style.marginLeft = '40px';
+                        element.style.marginRight = '40px';
+                        element.style.borderLeft = '3px solid #ccc';
+                        element.style.paddingLeft = '15px';
+                        break;
+                    default:
+                        element.style.fontSize = '11pt';
+                        element.style.fontWeight = 'normal';
+                }
+                
+                try {
+                    range.surroundContents(element);
+                } catch (e) {
+                    const contents = range.extractContents();
+                    element.appendChild(contents);
+                    range.insertNode(element);
+                }
+            }
+            saveState();
+        }
+
+        function clearFormatting() {
+            document.execCommand('removeFormat');
+            saveState();
+        }
+
+        function findText() {
+            const searchTerm = prompt('Find:');
+            if (searchTerm) {
+                if (window.find) {
+                    window.find(searchTerm);
+                } else {
+                    // Fallback for browsers that don't support window.find
+                    const content = getCurrentPage().innerHTML;
+                    const regex = new RegExp(searchTerm, 'gi');
+                    const highlighted = content.replace(regex, `<mark>${searchTerm}</mark>`);
+                    getCurrentPage().innerHTML = highlighted;
+                }
+            }
+        }
+
+        function replaceText() {
+            const searchTerm = prompt('Find:');
+            if (searchTerm) {
+                const replaceTerm = prompt('Replace with:');
+                if (replaceTerm !== null) {
+                    const pages = document.querySelectorAll('.document-page');
+                    pages.forEach(page => {
+                        page.innerHTML = page.innerHTML.replace(new RegExp(searchTerm, 'gi'), replaceTerm);
+                    });
+                    saveState();
+                }
+            }
+        }
+
+        function selectAll() {
+            const page = getCurrentPage();
+            const range = document.createRange();
+            range.selectNodeContents(page);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        // Insert functions
+        function insertCoverPage() {
+            const coverPage = createNewPage();
+            coverPage.innerHTML = `
+                <div class="page-number">Page ${pageCount}</div>
+                <div style="text-align: center; margin-top: 200px;">
+                    <h1 style="font-size: 36pt; font-weight: bold; margin-bottom: 40px;">Document Title</h1>
+                    <h2 style="font-size: 18pt; margin-bottom: 20px;">Subtitle</h2>
+                    <p style="font-size: 14pt; margin-bottom: 40px;">Author Name</p>
+                    <p style="font-size: 12pt;">${new Date().toLocaleDateString()}</p>
+                </div>
+            `;
+            saveState();
+        }
+
+        function insertBlankPage() {
+            createNewPage();
+            saveState();
+        }
+
+        function insertPageBreak() {
+            createNewPage();
+            saveState();
+        }
+
+        function insertTable(rows, cols) {
+            let tableHTML = '<table class="document-table" style="width: 100%; border-collapse: collapse; margin: 10px 0;">';
+            for (let i = 0; i < rows; i++) {
+                tableHTML += '<tr>';
+                for (let j = 0; j < cols; j++) {
+                    tableHTML += '<td style="border: 1px solid #000; padding: 8px; min-width: 50px; min-height: 20px;" contenteditable="true">&nbsp;</td>';
+                }
+                tableHTML += '</tr>';
+            }
+            tableHTML += '</table>';
+            
+            document.execCommand('insertHTML', false, tableHTML);
+            saveState();
+        }
+
+        function insertCustomTable() {
+            const rows = prompt('Number of rows:', '3');
+            const cols = prompt('Number of columns:', '3');
+            if (rows && cols) {
+                insertTable(parseInt(rows), parseInt(cols));
+            }
+        }
+
+        function insertPicture() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = `<img src="${e.target.result}" style="max-width: 100%; height: auto; margin: 10px 0;" alt="Inserted image">`;
+                        document.execCommand('insertHTML', false, img);
+                        saveState();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        function insertOnlinePicture() {
+            const url = prompt('Enter image URL:');
+            if (url) {
+                const img = `<img src="${url}" style="max-width: 100%; height: auto; margin: 10px 0;" alt="Online image" onerror="this.alt='Image failed to load'">`;
+                document.execCommand('insertHTML', false, img);
+                saveState();
+            }
+        }
+
+        function insertShape(shape) {
+            let shapeHTML = '';
+            switch(shape) {
+                case 'rectangle':
+                    shapeHTML = '<div style="width: 100px; height: 60px; border: 2px solid #000; background: #f0f0f0; margin: 10px; display: inline-block;"></div>';
+                    break;
+                case 'circle':
+                    shapeHTML = '<div style="width: 80px; height: 80px; border: 2px solid #000; background: #f0f0f0; border-radius: 50%; margin: 10px; display: inline-block;"></div>';
+                    break;
+                case 'triangle':
+                    shapeHTML = '<div style="width: 0; height: 0; border-left: 40px solid transparent; border-right: 40px solid transparent; border-bottom: 60px solid #f0f0f0; margin: 10px; display: inline-block;"></div>';
+                    break;
+                case 'arrow':
+                    shapeHTML = '<div style="font-size: 48px; margin: 10px; display: inline-block;">→</div>';
+                    break;
+                case 'star':
+                    shapeHTML = '<div style="font-size: 48px; margin: 10px; display: inline-block;">★</div>';
+                    break;
+            }
+            document.execCommand('insertHTML', false, shapeHTML);
+            saveState();
+        }
+
+        function insertSmartArt() {
+            const smartArt = `
+                <div style="border: 1px solid #ccc; padding: 20px; margin: 10px 0; text-align: center; background: #f9f9f9;">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div style="border: 2px solid #0078d4; padding: 10px; background: white; border-radius: 5px;">Step 1</div>
+                        <div style="font-size: 24px;">→</div>
+                        <div style="border: 2px solid #0078d4; padding: 10px; background: white; border-radius: 5px;">Step 2</div>
+                        <div style="font-size: 24px;">→</div>
+                        <div style="border: 2px solid #0078d4; padding: 10px; background: white; border-radius: 5px;">Step 3</div>
+                    </div>
+                </div>
+            `;
+            document.execCommand('insertHTML', false, smartArt);
+            saveState();
+        }
+
+        function insertChart() {
+            const chart = `
+                <div style="border: 1px solid #ccc; padding: 20px; margin: 10px 0; text-align: center; background: #f9f9f9;">
+                    <h4>Sample Chart</h4>
+                    <div style="display: flex; justify-content: space-around; align-items: end; height: 150px; margin-top: 20px;">
+                        <div style="background: #0078d4; width: 40px; height: 80px; margin: 0 5px;"></div>
+                        <div style="background: #106ebe; width: 40px; height: 120px; margin: 0 5px;"></div>
+                        <div style="background: #005a9e; width: 40px; height: 60px; margin: 0 5px;"></div>
+                        <div style="background: #004578; width: 40px; height: 100px; margin: 0 5px;"></div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px;">Q1 &nbsp;&nbsp;&nbsp; Q2 &nbsp;&nbsp;&nbsp; Q3 &nbsp;&nbsp;&nbsp; Q4</div>
+                </div>
+            `;
+            document.execCommand('insertHTML', false, chart);
+            saveState();
+        }
+
+        function insertHyperlink() {
+            const url = prompt('Enter URL:');
+            if (url) {
+                const text = prompt('Display text:', url);
+                const link = `<a href="${url}" style="color: #0078d4; text-decoration: underline;">${text}</a>`;
+                document.execCommand('insertHTML', false, link);
+                saveState();
+            }
+        }
+
+        function insertBookmark() {
+            const name = prompt('Bookmark name:');
+            if (name) {
+                const bookmark = `<span id="bookmark-${name}" style="background: yellow; padding: 2px;">[${name}]</span>`;
+                document.execCommand('insertHTML', false, bookmark);
+                saveState();
+            }
+        }
+
+        function insertCrossReference() {
+            alert('Cross-reference dialog would open here in full version');
+        }
+
+        function insertHeader() {
+            alert('Header editing mode would activate in full version');
+        }
+
+        function insertFooter() {
+            alert('Footer editing mode would activate in full version');
+        }
+
+        function insertPageNumber(position) {
+            const pageNum = `<span class="page-number-field">${pageCount}</span>`;
+            document.execCommand('insertHTML', false, pageNum);
+            saveState();
+        }
+
+        function insertTextBox() {
+            const textBox = `
+                <div contenteditable="true" style="border: 1px solid #ccc; padding: 10px; margin: 10px; width: 200px; height: 100px; background: white; display: inline-block; vertical-align: top;">
+                    Click here to add text
+                </div>
+            `;
+            document.execCommand('insertHTML', false, textBox);
+            saveState();
+        }
+
+        function insertDocProperty() {
+            const property = prompt('Enter document property (Title, Author, etc.):');
+            if (property) {
+                document.execCommand('insertText', false, `{${property}}`);
+                saveState();
+            }
+        }
+
+        function insertField() {
+            const field = prompt('Enter field code:');
+            if (field) {
+                document.execCommand('insertText', false, `{${field}}`);
+                saveState();
+            }
+        }
+
+        function insertAutoText() {
+            const autoText = prompt('Enter AutoText name:');
+            if (autoText) {
+                // Simulate AutoText insertion
+                const texts = {
+                    'signature': 'Best regards,\n[Your Name]',
+                    'address': '[Your Address]\n[City, State ZIP]',
+                    'phone': '[Your Phone Number]'
+                };
+                const text = texts[autoText.toLowerCase()] || autoText;
+                document.execCommand('insertText', false, text);
+                saveState();
+            }
+        }
+
+        function insertWordArt() {
+            const text = prompt('Enter text for WordArt:');
+            if (text) {
+                const wordArt = `
+                    <div style="font-size: 36px; font-weight: bold; background: linear-gradient(45deg, #0078d4, #106ebe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin: 20px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                        ${text}
+                    </div>
+                `;
+                document.execCommand('insertHTML', false, wordArt);
+                saveState();
+            }
+        }
+
+        function insertDateTime() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            const dateTime = now.toLocaleDateString('en-US', options);
+            document.execCommand('insertText', false, dateTime);
+            saveState();
+        }
+
+        function insertExcelSheet() {
+            const sheet = `
+                <table style="border-collapse: collapse; width: 100%; background: #f9f9f9; margin: 10px 0;">
+                    <tr>
+                        <td style="border: 1px solid #ccc; padding: 8px; background: #e1e1e1; font-weight: bold; text-align: center;">A</td>
+                        <td style="border: 1px solid #ccc; padding: 8px; background: #e1e1e1; font-weight: bold; text-align: center;">B</td>
+                        <td style="border: 1px solid #ccc; padding: 8px; background: #e1e1e1; font-weight: bold; text-align: center;">C</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px; min-width: 80px;">1</td>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px; min-width: 80px;">2</td>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px; min-width: 80px;">3</td>
+                    </tr>
+                    <tr>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px;">4</td>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px;">5</td>
+                        <td contenteditable="true" style="border: 1px solid #ccc; padding: 8px;">6</td>
+                    </tr>
+                </table>
+            `;
+            document.execCommand('insertHTML', false, sheet);
+            saveState();
+        }
+
+        function insertPackage() {
+            alert('Package insertion would open file browser in full version');
+        }
+
+        function insertSymbol() {
+            const symbols = ['©', '®', '™', '°', '±', '÷', '×', '∞', 'α', 'β', 'γ', 'δ', 'π', 'Σ', '∑', '∫'];
+            const symbol = prompt(`Choose a symbol:\n${symbols.join(', ')}\n\nOr enter any Unicode character:`);
+            if (symbol) {
+                document.execCommand('insertText', false, symbol);
+                saveState();
+            }
+        }
+
+        function insertEquation() {
+            const equation = prompt('Enter equation (use ^ for superscript, _ for subscript):');
+            if (equation) {
+                // Simple equation formatting
+                let formatted = equation
+                    .replace(/\^(\w+)/g, '<sup>$1</sup>')
+                    .replace(/_(\w+)/g, '<sub>$1</sub>');
+                
+                const eq = `<span style="font-family: 'Times New Roman', serif; font-style: italic; margin: 0 5px;">${formatted}</span>`;
+                document.execCommand('insertHTML', false, eq);
+                saveState();
+            }
+        }
+
+        // Design functions
+        function applyTheme(theme) {
+            const themes = {
+                'office': { bg: '#ffffff', text: '#000000', accent: '#0078d4' },
+                'facet': { bg: '#f8f9fa', text: '#212529', accent: '#007bff' },
+                'integral': { bg: '#f5f5f5', text: '#333333', accent: '#28a745' },
+                'ion': { bg: '#fafafa', text: '#2c3e50', accent: '#e74c3c' },
+                'retrospect': { bg: '#f4f4f4', text: '#34495e', accent: '#9b59b6' }
+            };
+            
+            const selectedTheme = themes[theme];
+            if (selectedTheme) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    page.style.backgroundColor = selectedTheme.bg;
+                    page.style.color = selectedTheme.text;
+                });
+                alert(`Applied ${theme} theme`);
+            }
+        }
+
+        function applyColorScheme(color) {
+            const schemes = {
+                'blue': '#0078d4',
+                'red': '#d13438',
+                'green': '#107c10',
+                'orange': '#ff8c00',
+                'purple': '#5c2d91'
+            };
+            
+            const selectedColor = schemes[color];
+            if (selectedColor) {
+                document.documentElement.style.setProperty('--accent-color', selectedColor);
+                alert(`Applied ${color} color scheme`);
+            }
+        }
+
+        function applyFontScheme(font) {
+            const fonts = {
+                'calibri': 'Calibri, sans-serif',
+                'cambria': 'Cambria, serif',
+                'arial': 'Arial, sans-serif',
+                'times': 'Times New Roman, serif'
+            };
+            
+            const selectedFont = fonts[font];
+            if (selectedFont) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    page.style.fontFamily = selectedFont;
+                });
+                alert(`Applied ${font} font scheme`);
+            }
+        }
+
+        function setParagraphSpacing(spacing) {
+            const spacings = {
+                'compact': { lineHeight: '1.0', marginBottom: '0pt' },
+                'tight': { lineHeight: '1.15', marginBottom: '6pt' },
+                'open': { lineHeight: '1.5', marginBottom: '12pt' },
+                'relaxed': { lineHeight: '1.75', marginBottom: '18pt' },
+                'double': { lineHeight: '2.0', marginBottom: '24pt' }
+            };
+            
+            const selectedSpacing = spacings[spacing];
+            if (selectedSpacing) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    page.style.lineHeight = selectedSpacing.lineHeight;
+                    const paragraphs = page.querySelectorAll('p');
+                    paragraphs.forEach(p => {
+                        p.style.marginBottom = selectedSpacing.marginBottom;
+                    });
+                });
+                alert(`Applied ${spacing} paragraph spacing`);
+            }
+        }
+
+        function insertTextWatermark() {
+            const text = prompt('Enter watermark text:');
+            if (text) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    page.style.backgroundImage = `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='150'><text x='50%' y='50%' font-size='24' fill='rgba(0,0,0,0.1)' text-anchor='middle' dominant-baseline='middle' transform='rotate(-45 150 75)'>${encodeURIComponent(text)}</text></svg>")`;
+                    page.style.backgroundRepeat = 'repeat';
+                    page.style.backgroundPosition = 'center';
+                });
+                alert('Text watermark added');
+            }
+        }
+
+        function insertPictureWatermark() {
+            alert('Picture watermark would open file browser in full version');
+        }
+
+        function removeWatermark() {
+            const pages = document.querySelectorAll('.document-page');
+            pages.forEach(page => {
+                page.style.backgroundImage = 'none';
+            });
+            alert('Watermark removed');
+        }
+
+        function changePageColor() {
+            const color = prompt('Enter background color (e.g., #f0f0f0, lightblue):');
+            if (color) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    page.style.backgroundColor = color;
+                });
+                alert('Page color changed');
+            }
+        }
+
+        function addPageBorder(type) {
+            const borders = {
+                'box': '2px solid #000',
+                'shadow': '2px solid #000, 4px 4px 8px rgba(0,0,0,0.3)',
+                '3d': '4px ridge #ccc',
+                'custom': prompt('Enter custom border (e.g., 1px dashed red):') || '1px solid #000'
+            };
+            
+            const border = borders[type];
+            if (border) {
+                const pages = document.querySelectorAll('.document-page');
+                pages.forEach(page => {
+                    if (type === 'shadow') {
+                        page.style.border = '2px solid #000';
+                        page.style.boxShadow = '4px 4px 8px rgba(0,0,0,0.3)';
+                    } else {
+                        page.style.border = border;
+                    }
+                });
+                alert(`Applied ${type} border`);
+            }
+        }
+
+        function removePageBorder() {
+            const pages = document.querySelectorAll('.document-page');
+            pages.forEach(page => {
+                page.style.border = 'none';
+                page.style.boxShadow = '0 0 10px rgba(0,0,0,0.1)';
+            });
+            alert('Page border removed');
+        }
+
+        // Page Layout functions
+        function setMargins(type) {
+            const margins = {
+                'normal': '1in',
+                'narrow': '0.5in',
+                'moderate': '0.75in',
+                'wide': '2in'
+            };
+            
+            if (type === 'custom') {
+                const margin = prompt('Enter margin size (e.g., 1.5in, 2cm):');
+                if (margin) {
+                    const pages = document.querySelectorAll('.document-page');
+                    pages.forEach(page => {
+                        page.style.padding = margin;
+                    });
+                }
+            } else {
+                const margin = margins[type];
+                if (margin) {
+                    const pages = document.querySelectorAll('.document-page');
+                    pages.forEach(page => {
+                        page.style.padding = margin;
+                    });
+                    alert(`Applied ${type} margins`);
+                }
+            }
+        }
+
+        function changeOrientation() {
+            const pages = document.querySelectorAll('.document-page');
+            const firstPage = pages[0];
+            const currentWidth = firstPage.style.width || '8.5in';
+            
+            pages.forEach(page => {
+                if (currentWidth === '11in') {
+                    // Change to Portrait
+                    page.style.width = '8.5in';
+                    page.style.height = '11in';
+                    alert('Changed to Portrait orientation');
+                } else {
+                    // Change to Landscape
+                    page.style.width = '11in';
+                    page.style.height = '8.5in';<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96804624c0a22e92',t:'MTc1Mzk5ODIzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
