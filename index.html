@@ -551,10 +551,22 @@
         <div class="ribbon-content active" id="home-content">
             <div class="ribbon-group">
                 <div class="ribbon-buttons">
-                    <button class="ribbon-btn" onclick="formatText('cut')">✂️</button>
-                    <button class="ribbon-btn" onclick="formatText('copy')">📋</button>
-                    <button class="ribbon-btn" onclick="formatText('paste')">📄</button>
-                    <button class="ribbon-btn" onclick="formatPainter()">🖌️</button>
+                    <button class="ribbon-btn" onclick="formatText('cut')">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-9zm0 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-9zm0 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-9z"/></svg>
+                        Cut
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('copy')">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                        Copy
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('paste')">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1z"/><path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>
+                        Paste
+                    </button>
+                    <button class="ribbon-btn" onclick="formatPainter()">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3.5 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-9z"/></svg>
+                        Format Painter
+                    </button>
                 </div>
                 <div class="ribbon-group-label">Clipboard</div>
             </div>
@@ -569,9 +581,18 @@
                         <option value="Verdana">Verdana</option>
                     </select>
                     <input type="number" class="font-size" value="11" min="8" max="72" onchange="changeFontSize(this.value)">
-                    <button class="ribbon-btn" onclick="formatText('bold')" id="bold-btn"><strong>B</strong></button>
-                    <button class="ribbon-btn" onclick="formatText('italic')" id="italic-btn"><em>I</em></button>
-                    <button class="ribbon-btn" onclick="formatText('underline')" id="underline-btn"><u>U</u></button>
+                    <button class="ribbon-btn" onclick="formatText('bold')" id="bold-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M8.21 13c2.106 0 3.412-1.087 3.412-2.823 0-1.306-.984-2.283-2.324-2.386v-.055a2.176 2.176 0 0 0 1.852-2.14c0-1.51-1.162-2.46-3.014-2.46H3.843V13H8.21zM5.908 4.674h1.696c.963 0 1.517.451 1.517 1.244 0 .834-.629 1.32-1.73 1.32H5.908V4.674zm0 6.788V8.598h1.73c1.217 0 1.88.492 1.88 1.415 0 .943-.643 1.449-1.832 1.449H5.908z"/></svg>
+                        <strong>B</strong>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('italic')" id="italic-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M7.991 11.674 9.53 4.455c.123-.595.246-.71 1.347-.807l.11-.52H7.211l-.11.52c1.06.096 1.128.212 1.005.807L6.57 11.674c-.123.595-.246.71-1.346.806l-.11.52h3.774l.11-.52c-1.06-.095-1.129-.211-1.006-.806z"/></svg>
+                        <em>I</em>
+                    </button>
+                    <button class="ribbon-btn" onclick="formatText('underline')" id="underline-btn">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M5.313 3.136h-1.23V9.54c0 2.105 1.47 3.623 3.917 3.623s3.917-1.518 3.917-3.623V3.136h-1.23v6.323c0 1.49-.978 2.57-2.687 2.57-1.709 0-2.687-1.08-2.687-2.57V3.136zM12.5 15h-9v-1h9v1z"/></svg>
+                        <u>U</u>
+                    </button>
                     <input type="color" class="color-picker" onchange="changeFontColor(this.value)" title="Font Color">
                 </div>
                 <div class="ribbon-group-label">Font</div>
@@ -581,10 +602,18 @@
                 <div class="ribbon-buttons">
                     <button class="ribbon-btn" onclick="insertList('ul')">•</button>
                     <button class="ribbon-btn" onclick="insertList('ol')">1.</button>
-                    <button class="ribbon-btn" onclick="alignText('left')" id="align-left">⬅️</button>
-                    <button class="ribbon-btn" onclick="alignText('center')" id="align-center">⬌</button>
-                    <button class="ribbon-btn" onclick="alignText('right')" id="align-right">➡️</button>
-                    <button class="ribbon-btn" onclick="alignText('justify')" id="align-justify">⬍</button>
+                    <button class="ribbon-btn" onclick="alignText('left')" id="align-left">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('center')" id="align-center">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('right')" id="align-right">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                    </button>
+                    <button class="ribbon-btn" onclick="alignText('justify')" id="align-justify">
+                        <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/></svg>
+                    </button>
                 </div>
                 <div class="ribbon-group-label">Paragraph</div>
             </div>
@@ -1409,13 +1438,14 @@
     <div class="document-container" id="document-container">
         <div class="document-page paper-a4" contenteditable="true" id="page-1" onkeyup="handleTyping(event)" onclick="updateStatus()" onpaste="handlePaste(event)">
             <div class="page-number">Page 1</div>
+            <p><br></p>
         </div>
     </div>
 
     <!-- Status Bar -->
     <div class="status-bar">
         <div>
-            <span id="word-count">Words: 6</span> | 
+            <span id="word-count">Words: 0</span> | 
             <span id="page-info">Page 1 of 1</span> |
             <span id="language">English (United States)</span> |
             <span id="zoom-info">Zoom: 100%</span>
@@ -1705,6 +1735,9 @@
 
         // Formatting functions
         function formatText(command) {
+            const page = getCurrentPage();
+            page.focus();
+            
             if (command === 'cut') {
                 document.execCommand('cut');
             } else if (command === 'copy') {
@@ -1715,7 +1748,6 @@
                 document.execCommand(command, false, null);
             }
             updateFormatButtons();
-            saveState();
         }
 
         function formatPainter() {
@@ -1990,6 +2022,9 @@
         }
 
         function insertTable(rows, cols) {
+            const page = getCurrentPage();
+            page.focus();
+            
             let tableHTML = '<table class="document-table" style="width: 100%; border-collapse: collapse; margin: 10px 0;">';
             for (let i = 0; i < rows; i++) {
                 tableHTML += '<tr>';
@@ -1998,10 +2033,9 @@
                 }
                 tableHTML += '</tr>';
             }
-            tableHTML += '</table>';
+            tableHTML += '</table><p><br></p>';
             
             document.execCommand('insertHTML', false, tableHTML);
-            saveState();
         }
 
         function insertCustomTable() {
@@ -2481,13 +2515,16 @@
             newPage.className = `document-page paper-${currentPaperSize}`;
             newPage.contentEditable = true;
             newPage.id = `page-${pageCount}`;
-            newPage.onkeyup = handleTyping;
-            newPage.onclick = updateStatus;
-            newPage.onpaste = handlePaste;
-            newPage.innerHTML = `<div class="page-number">Page ${pageCount}</div>`;
+            newPage.setAttribute('onkeyup', 'handleTyping(event)');
+            newPage.setAttribute('onclick', 'updateStatus()');
+            newPage.setAttribute('onpaste', 'handlePaste(event)');
+            newPage.innerHTML = `<div class="page-number">Page ${pageCount}</div><p><br></p>`;
             
             document.getElementById('document-container').appendChild(newPage);
             updateStatus();
+            
+            // Focus the new page
+            newPage.focus();
             return newPage;
         }
 
@@ -2519,39 +2556,15 @@
         }
 
         function handleTyping(event) {
-            const page = event.target;
-            
-            // Get actual content height vs available space
-            const contentHeight = page.scrollHeight;
-            const availableHeight = page.clientHeight;
-            
-            // Check if content exceeds page height and we haven't reached limit
-            if (contentHeight > availableHeight && pageCount < 1000000) {
-                const newPage = createNewPage();
-                
-                // Move cursor to new page
-                newPage.focus();
-                const range = document.createRange();
-                const selection = window.getSelection();
-                
-                // Create a paragraph if page is empty
-                if (!newPage.querySelector('p')) {
-                    const p = document.createElement('p');
-                    p.innerHTML = '<br>';
-                    newPage.appendChild(p);
-                }
-                
-                const firstP = newPage.querySelector('p');
-                if (firstP) {
-                    range.setStart(firstP, 0);
-                    range.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-            }
-            
             updateStatus();
-            saveState();
+            
+            // Auto-create new page when content overflows
+            const page = event.target;
+            if (page.scrollHeight > page.clientHeight && pageCount < 1000000) {
+                setTimeout(() => {
+                    createNewPage();
+                }, 100);
+            }
         }
 
         function handlePaste(event) {
@@ -2811,4 +2824,4 @@
         function pauseRecording() { alert('Macro recording paused'); }
         function macroSecurity() { alert('Macro security dialog opened'); }
         function goToLastEdit() { alert('Moved to last edit location'); }
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96805d0103a602c5',t:'MTc1Mzk5OTE3MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96806404f720cc0a',t:'MTc1Mzk5OTQ1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
