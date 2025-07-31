@@ -1,0 +1,921 @@
+// Global variables
+let currentZoom = 100;
+let undoStack = [];
+let redoStack = [];
+let trackChanges = false;
+let pageCount = 1;
+let currentPaperSize = 'a4';
+let formatPainterActive = false;
+let copiedFormat = null;
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    updateStatus();
+    saveState();
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    // Enhanced keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown')) {
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.classList.remove('active');
+            });
+        }
+    });
+}
+
+function handleKeyboardShortcuts(e) {
+    if (e.ctrlKey) {
+        switch(e.key.toLowerCase()) {
+            case 'n': e.preventDefault(); newDocument(); break;
+            case 'o': e.preventDefault(); openDocument(); break;
+            case 's': e.preventDefault(); saveDocument(); break;
+            case 'p': e.preventDefault(); printDocument(); break;
+            case 'b': e.preventDefault(); formatText('bold'); break;
+            case 'i': e.preventDefault(); formatText('italic'); break;
+            case 'u': e.preventDefault(); formatText('underline'); break;
+            case 'a': e.preventDefault(); selectAll(); break;
+            case 'f': e.preventDefault(); findText(); break;
+            case 'h': e.preventDefault(); replaceText(); break;
+            case 'z': 
+                e.preventDefault(); 
+                if (e.shiftKey) {
+                    redo();
+                } else {
+                    undo();
+                }
+                break;
+            case 'y': e.preventDefault(); redo(); break;
+        }
+    }
+}
+
+// Tab switching
+function switchTab(tabName) {
+    console.log('Switching to tab:', tabName);
+    
+    // Hide all ribbon contents
+    document.querySelectorAll('.ribbon-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    const targetContent = document.getElementById(tabName + '-content');
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+    
+    // Update tab button states
+    document.querySelectorAll('.ribbon-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Find and activate the clicked tab
+    document.querySelectorAll('.ribbon-tab').forEach(tab => {
+        if (tab.textContent.toLowerCase().includes(tabName)) {
+            tab.classList.add('active');
+        }
+    });
+}
+
+// Backstage functions
+function openBackstage() {
+    console.log('Opening backstage');
+    document.getElementById('backstage').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBackstage() {
+    console.log('Closing backstage');
+    document.getElementById('backstage').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Window controls
+function minimizeWindow() {
+    alert('Window minimized (demo)');
+}
+
+function maximizeWindow() {
+    alert('Window maximized (demo)');
+}
+
+function closeWindow() {
+    if (confirm('Do you want to save changes to Document1?')) {
+        saveDocument();
+    }
+}
+
+// Document functions
+function newDocument() {
+    if (confirm('Create a new document? Unsaved changes will be lost.')) {
+        document.getElementById('document-container').innerHTML = `
+            <div class="document-page paper-${currentPaperSize}" contenteditable="true" id="page-1" onkeyup="handleTyping(event)" onclick="updateStatus()" onpaste="handlePaste(event)">
+                <div class="page-number">Page 1</div>
+                <p><br></p>
+            </div>
+        `;
+        pageCount = 1;
+        updateStatus();
+        saveState();
+    }
+}
+
+function openDocument() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt,.html,.doc,.docx';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                getCurrentPage().innerHTML = `<div class="page-number">Page 1</div><p>${content}</p>`;
+                updateStatus();
+                saveState();
+            };
+            reader.readAsText(file);
+        }
+    };
+    input.click();
+}
+
+function saveDocument() {
+    const content = getAllPagesContent();
+    const blob = new Blob([content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'document.html';
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('Document saved successfully!');
+}
+
+function saveAsDocument() {
+    const filename = prompt('Enter filename:', 'document.html');
+    if (filename) {
+        const content = getAllPagesContent();
+        const blob = new Blob([content], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        alert(`Document saved as ${filename}!`);
+    }
+}
+
+function printDocument() {
+    window.print();
+}
+
+function shareDocument() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Babbl Docs Document',
+            text: 'Check out this document created with Babbl Docs',
+            url: window.location.href
+        });
+    } else {
+        alert('Sharing not supported on this device. Use the browser\'s share feature.');
+    }
+}
+
+function exportDocument() {
+    const format = prompt('Export format (html, txt, pdf):', 'html');
+    if (format) {
+        switch(format.toLowerCase()) {
+            case 'html':
+                saveDocument();
+                break;
+            case 'txt':
+                exportAsText();
+                break;
+            case 'pdf':
+                alert('PDF export would require additional libraries in a full implementation');
+                break;
+            default:
+                alert('Unsupported format');
+        }
+    }
+}
+
+function exportAsText() {
+    const content = getAllPagesText();
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'document.txt';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function documentInfo() {
+    const wordCount = getWordCount();
+    const charCount = getCharacterCount();
+    alert(`Document Information:\nPages: ${pageCount}\nWords: ${wordCount}\nCharacters: ${charCount}\nCreated: ${new Date().toLocaleDateString()}`);
+}
+
+function closeDocument() {
+    if (confirm('Close document? Unsaved changes will be lost.')) {
+        newDocument();
+    }
+}
+
+function accountSettings() {
+    alert('Account settings would open here in full version');
+}
+
+function optionsSettings() {
+    alert('Options dialog would open here in full version');
+}
+
+// Formatting functions
+function formatText(command) {
+    console.log('Format command:', command);
+    const page = getCurrentPage();
+    if (page) page.focus();
+    
+    if (command === 'cut') {
+        const selectedText = window.getSelection().toString();
+        if (selectedText) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(selectedText).then(() => {
+                    document.execCommand('delete');
+                    showMessage('Text cut successfully');
+                }).catch(() => {
+                    document.execCommand('cut');
+                    showMessage('Text cut');
+                });
+            } else {
+                document.execCommand('cut');
+                showMessage('Text cut');
+            }
+        } else {
+            showMessage('Please select text to cut');
+        }
+    } else if (command === 'copy') {
+        const selectedText = window.getSelection().toString();
+        if (selectedText) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(selectedText).then(() => {
+                    showMessage('Text copied successfully');
+                }).catch(() => {
+                    document.execCommand('copy');
+                    showMessage('Text copied');
+                });
+            } else {
+                document.execCommand('copy');
+                showMessage('Text copied');
+            }
+        } else {
+            showMessage('Please select text to copy');
+        }
+    } else if (command === 'paste') {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+            navigator.clipboard.readText().then(text => {
+                if (text) {
+                    document.execCommand('insertText', false, text);
+                    showMessage('Text pasted successfully');
+                    saveState();
+                } else {
+                    showMessage('Clipboard is empty');
+                }
+            }).catch(() => {
+                document.execCommand('paste');
+                showMessage('Text pasted');
+            });
+        } else {
+            document.execCommand('paste');
+            showMessage('Text pasted');
+        }
+    } else {
+        document.execCommand(command, false, null);
+    }
+    updateFormatButtons();
+    saveState();
+}
+
+function formatPainter() {
+    if (formatPainterActive) {
+        formatPainterActive = false;
+        document.body.style.cursor = 'default';
+        alert('Format Painter deactivated');
+    } else {
+        copyFormat();
+        formatPainterActive = true;
+        document.body.style.cursor = 'crosshair';
+        alert('Format Painter activated. Click on text to apply formatting.');
+    }
+}
+
+function copyFormat() {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const element = range.commonAncestorContainer.nodeType === Node.TEXT_NODE 
+            ? range.commonAncestorContainer.parentElement 
+            : range.commonAncestorContainer;
+        
+        copiedFormat = {
+            fontFamily: getComputedStyle(element).fontFamily,
+            fontSize: getComputedStyle(element).fontSize,
+            fontWeight: getComputedStyle(element).fontWeight,
+            fontStyle: getComputedStyle(element).fontStyle,
+            textDecoration: getComputedStyle(element).textDecoration,
+            color: getComputedStyle(element).color,
+            backgroundColor: getComputedStyle(element).backgroundColor
+        };
+    }
+}
+
+function changeFont(fontFamily) {
+    document.execCommand('fontName', false, fontFamily);
+    saveState();
+}
+
+function changeFontSize(size) {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0 && selection.toString()) {
+        document.execCommand('fontSize', false, '7');
+        const fontElements = document.querySelectorAll('font[size="7"]');
+        fontElements.forEach(element => {
+            element.removeAttribute('size');
+            element.style.fontSize = size + 'pt';
+        });
+    }
+    saveState();
+}
+
+function changeFontColor(color) {
+    document.execCommand('foreColor', false, color);
+    saveState();
+}
+
+function alignText(alignment) {
+    const alignCommands = {
+        'left': 'justifyLeft',
+        'center': 'justifyCenter',
+        'right': 'justifyRight',
+        'justify': 'justifyFull'
+    };
+    document.execCommand(alignCommands[alignment], false, null);
+    
+    // Update button states
+    document.querySelectorAll('[id^="align-"]').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('align-' + alignment).classList.add('active');
+    
+    saveState();
+}
+
+function insertList(type) {
+    const command = type === 'ul' ? 'insertUnorderedList' : 'insertOrderedList';
+    document.execCommand(command, false, null);
+    saveState();
+}
+
+function applyStyle(style) {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const element = document.createElement('span');
+        
+        switch(style) {
+            case 'heading1':
+                element.style.fontSize = '18pt';
+                element.style.fontWeight = 'bold';
+                element.style.marginBottom = '12pt';
+                break;
+            case 'heading2':
+                element.style.fontSize = '14pt';
+                element.style.fontWeight = 'bold';
+                element.style.marginBottom = '10pt';
+                break;
+            case 'heading3':
+                element.style.fontSize = '12pt';
+                element.style.fontWeight = 'bold';
+                element.style.marginBottom = '8pt';
+                break;
+            default:
+                element.style.fontSize = '11pt';
+                element.style.fontWeight = 'normal';
+        }
+        
+        try {
+            range.surroundContents(element);
+        } catch (e) {
+            const contents = range.extractContents();
+            element.appendChild(contents);
+            range.insertNode(element);
+        }
+    }
+    saveState();
+}
+
+function clearFormatting() {
+    document.execCommand('removeFormat');
+    saveState();
+}
+
+function findText() {
+    const searchTerm = prompt('Find:');
+    if (searchTerm) {
+        if (window.find) {
+            window.find(searchTerm);
+        } else {
+            // Fallback for browsers that don't support window.find
+            const content = getCurrentPage().innerHTML;
+            const regex = new RegExp(searchTerm, 'gi');
+            const highlighted = content.replace(regex, `<mark>${searchTerm}</mark>`);
+            getCurrentPage().innerHTML = highlighted;
+        }
+    }
+}
+
+function replaceText() {
+    const searchTerm = prompt('Find:');
+    if (searchTerm) {
+        const replaceTerm = prompt('Replace with:');
+        if (replaceTerm !== null) {
+            const pages = document.querySelectorAll('.document-page');
+            pages.forEach(page => {
+                page.innerHTML = page.innerHTML.replace(new RegExp(searchTerm, 'gi'), replaceTerm);
+            });
+            saveState();
+        }
+    }
+}
+
+function selectAll() {
+    const page = getCurrentPage();
+    const range = document.createRange();
+    range.selectNodeContents(page);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+// Insert functions
+function insertCoverPage() {
+    const coverPage = createNewPage();
+    coverPage.innerHTML = `
+        <div class="page-number">Page ${pageCount}</div>
+        <div style="text-align: center; margin-top: 200px;">
+            <h1 style="font-size: 36pt; font-weight: bold; margin-bottom: 40px;">Document Title</h1>
+            <h2 style="font-size: 18pt; margin-bottom: 20px;">Subtitle</h2>
+            <p style="font-size: 14pt; margin-bottom: 40px;">Author Name</p>
+            <p style="font-size: 12pt;">${new Date().toLocaleDateString()}</p>
+        </div>
+    `;
+    saveState();
+}
+
+function insertBlankPage() {
+    createNewPage();
+    saveState();
+}
+
+function insertPageBreak() {
+    createNewPage();
+    saveState();
+}
+
+function insertTable(rows, cols) {
+    const page = getCurrentPage();
+    page.focus();
+    
+    let tableHTML = '<table class="document-table" style="width: 100%; border-collapse: collapse; margin: 10px 0;">';
+    for (let i = 0; i < rows; i++) {
+        tableHTML += '<tr>';
+        for (let j = 0; j < cols; j++) {
+            tableHTML += '<td style="border: 1px solid #000; padding: 8px; min-width: 50px; min-height: 20px;" contenteditable="true">&nbsp;</td>';
+        }
+        tableHTML += '</tr>';
+    }
+    tableHTML += '</table><p><br></p>';
+    
+    document.execCommand('insertHTML', false, tableHTML);
+}
+
+function insertCustomTable() {
+    const rows = prompt('Number of rows:', '3');
+    const cols = prompt('Number of columns:', '3');
+    if (rows && cols) {
+        insertTable(parseInt(rows), parseInt(cols));
+    }
+}
+
+function insertPicture() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = `<img src="${e.target.result}" style="max-width: 100%; height: auto; margin: 10px 0;" alt="Inserted image">`;
+                document.execCommand('insertHTML', false, img);
+                saveState();
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+}
+
+function insertChart() {
+    const chart = `
+        <div style="border: 1px solid #ccc; padding: 20px; margin: 10px 0; text-align: center; background: #f9f9f9;">
+            <h4>Sample Chart</h4>
+            <div style="display: flex; justify-content: space-around; align-items: end; height: 150px; margin-top: 20px;">
+                <div style="background: #0078d4; width: 40px; height: 80px; margin: 0 5px;"></div>
+                <div style="background: #106ebe; width: 40px; height: 120px; margin: 0 5px;"></div>
+                <div style="background: #005a9e; width: 40px; height: 60px; margin: 0 5px;"></div>
+                <div style="background: #004578; width: 40px; height: 100px; margin: 0 5px;"></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 12px;">Q1 &nbsp;&nbsp;&nbsp; Q2 &nbsp;&nbsp;&nbsp; Q3 &nbsp;&nbsp;&nbsp; Q4</div>
+        </div>
+    `;
+    document.execCommand('insertHTML', false, chart);
+    saveState();
+}
+
+function insertHyperlink() {
+    const url = prompt('Enter URL:');
+    if (url) {
+        const text = prompt('Display text:', url);
+        const link = `<a href="${url}" style="color: #0078d4; text-decoration: underline;">${text}</a>`;
+        document.execCommand('insertHTML', false, link);
+        saveState();
+    }
+}
+
+function insertBookmark() {
+    const name = prompt('Bookmark name:');
+    if (name) {
+        const bookmark = `<span id="bookmark-${name}" style="background: yellow; padding: 2px;">[${name}]</span>`;
+        document.execCommand('insertHTML', false, bookmark);
+        saveState();
+    }
+}
+
+function insertTextBox() {
+    const textBox = `
+        <div contenteditable="true" style="border: 1px solid #ccc; padding: 10px; margin: 10px; width: 200px; height: 100px; background: white; display: inline-block; vertical-align: top;">
+            Click here to add text
+        </div>
+    `;
+    document.execCommand('insertHTML', false, textBox);
+    saveState();
+}
+
+function insertWordArt() {
+    const text = prompt('Enter text for WordArt:');
+    if (text) {
+        const wordArt = `
+            <div style="font-size: 36px; font-weight: bold; background: linear-gradient(45deg, #0078d4, #106ebe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin: 20px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                ${text}
+            </div>
+        `;
+        document.execCommand('insertHTML', false, wordArt);
+        saveState();
+    }
+}
+
+function insertDateTime() {
+    const now = new Date();
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    const dateTime = now.toLocaleDateString('en-US', options);
+    document.execCommand('insertText', false, dateTime);
+    saveState();
+}
+
+function insertSymbol() {
+    const symbols = ['©', '®', '™', '°', '±', '÷', '×', '∞', 'α', 'β', 'γ', 'δ', 'π', 'Σ', '∑', '∫'];
+    const symbol = prompt(`Choose a symbol:\n${symbols.join(', ')}\n\nOr enter any Unicode character:`);
+    if (symbol) {
+        document.execCommand('insertText', false, symbol);
+        saveState();
+    }
+}
+
+function insertEquation() {
+    const equation = prompt('Enter equation (use ^ for superscript, _ for subscript):');
+    if (equation) {
+        // Simple equation formatting
+        let formatted = equation
+            .replace(/\^(\w+)/g, '<sup>$1</sup>')
+            .replace(/_(\w+)/g, '<sub>$1</sub>');
+        
+        const eq = `<span style="font-family: 'Times New Roman', serif; font-style: italic; margin: 0 5px;">${formatted}</span>`;
+        document.execCommand('insertHTML', false, eq);
+        saveState();
+    }
+}
+
+// Design functions
+function applyTheme(theme) {
+    const themes = {
+        'office': { bg: '#ffffff', text: '#000000', accent: '#0078d4' },
+        'facet': { bg: '#f8f9fa', text: '#212529', accent: '#007bff' },
+        'integral': { bg: '#f5f5f5', text: '#333333', accent: '#28a745' }
+    };
+    
+    const selectedTheme = themes[theme];
+    if (selectedTheme) {
+        const pages = document.querySelectorAll('.document-page');
+        pages.forEach(page => {
+            page.style.backgroundColor = selectedTheme.bg;
+            page.style.color = selectedTheme.text;
+        });
+        alert(`Applied ${theme} theme`);
+    }
+}
+
+function changePageColor() {
+    const color = prompt('Enter background color (e.g., #f0f0f0, lightblue):');
+    if (color) {
+        const pages = document.querySelectorAll('.document-page');
+        pages.forEach(page => {
+            page.style.backgroundColor = color;
+        });
+        alert('Page color changed');
+    }
+}
+
+// View functions
+function setView(viewType) {
+    document.querySelectorAll('[id$="-mode"], [id$="-layout"], [id$="-view"]').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const viewMap = {
+        'read': 'read-mode',
+        'print': 'print-layout',
+        'web': 'web-layout'
+    };
+    
+    const buttonId = viewMap[viewType];
+    if (buttonId) {
+        document.getElementById(buttonId).classList.add('active');
+    }
+    
+    alert(`Switched to ${viewType} view`);
+}
+
+// Zoom functions
+function setZoom(level) {
+    currentZoom = parseInt(level);
+    const pages = document.querySelectorAll('.document-page');
+    pages.forEach(page => {
+        page.style.transform = `scale(${currentZoom / 100})`;
+        page.style.transformOrigin = 'top center';
+    });
+    
+    document.getElementById('zoom-level').textContent = currentZoom + '%';
+    document.getElementById('zoom-info').textContent = `Zoom: ${currentZoom}%`;
+    document.querySelector('.zoom-slider').value = currentZoom;
+}
+
+function zoomIn() {
+    if (currentZoom < 200) {
+        setZoom(currentZoom + 10);
+    }
+}
+
+function zoomOut() {
+    if (currentZoom > 50) {
+        setZoom(currentZoom - 10);
+    }
+}
+
+// Dropdown toggle function
+function toggleDropdown(button) {
+    console.log('Toggling dropdown');
+    const dropdown = button.closest('.dropdown');
+    if (!dropdown) return;
+    
+    const isActive = dropdown.classList.contains('active');
+    
+    // Close all dropdowns first
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+    
+    // Toggle current dropdown
+    if (!isActive) {
+        dropdown.classList.add('active');
+    }
+}
+
+// Helper functions
+function showMessage(message) {
+    // Create a temporary message element
+    const messageEl = document.createElement('div');
+    messageEl.textContent = message;
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #0078d4;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        z-index: 10000;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    `;
+    document.body.appendChild(messageEl);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+        if (messageEl.parentNode) {
+            messageEl.parentNode.removeChild(messageEl);
+        }
+    }, 2000);
+}
+
+function getCurrentPage() {
+    return document.querySelector('.document-page:last-child');
+}
+
+function createNewPage() {
+    pageCount++;
+    const newPage = document.createElement('div');
+    newPage.className = `document-page paper-${currentPaperSize}`;
+    newPage.contentEditable = true;
+    newPage.id = `page-${pageCount}`;
+    newPage.setAttribute('onkeyup', 'handleTyping(event)');
+    newPage.setAttribute('onclick', 'updateStatus()');
+    newPage.setAttribute('onpaste', 'handlePaste(event)');
+    newPage.innerHTML = `<div class="page-number">Page ${pageCount}</div><p><br></p>`;
+    
+    document.getElementById('document-container').appendChild(newPage);
+    updateStatus();
+    
+    // Focus the new page
+    newPage.focus();
+    return newPage;
+}
+
+function getAllPagesContent() {
+    const pages = document.querySelectorAll('.document-page');
+    let content = '';
+    pages.forEach(page => {
+        content += page.innerHTML + '\n\n';
+    });
+    return content;
+}
+
+function getAllPagesText() {
+    const pages = document.querySelectorAll('.document-page');
+    let text = '';
+    pages.forEach(page => {
+        text += page.innerText + '\n\n';
+    });
+    return text;
+}
+
+function getWordCount() {
+    const text = getAllPagesText();
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+}
+
+function getCharacterCount() {
+    return getAllPagesText().length;
+}
+
+function handleTyping(event) {
+    updateStatus();
+    
+    // Auto-create new page when content overflows
+    const page = event.target;
+    if (page.scrollHeight > page.clientHeight && pageCount < 1000000) {
+        setTimeout(() => {
+            createNewPage();
+        }, 100);
+    }
+}
+
+function handlePaste(event) {
+    setTimeout(() => {
+        updateStatus();
+        saveState();
+    }, 100);
+}
+
+function updateStatus() {
+    document.getElementById('word-count').textContent = `Words: ${getWordCount()}`;
+    document.getElementById('page-info').textContent = `Page ${pageCount} of ${pageCount}`;
+}
+
+function updateFormatButtons() {
+    // Update button states based on current selection
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+        const element = selection.getRangeAt(0).commonAncestorContainer.nodeType === Node.TEXT_NODE 
+            ? selection.getRangeAt(0).commonAncestorContainer.parentElement 
+            : selection.getRangeAt(0).commonAncestorContainer;
+        
+        const style = getComputedStyle(element);
+        
+        // Update bold button
+        const boldBtn = document.getElementById('bold-btn');
+        if (boldBtn) {
+            boldBtn.classList.toggle('active', style.fontWeight === 'bold' || style.fontWeight >= 700);
+        }
+        
+        // Update italic button
+        const italicBtn = document.getElementById('italic-btn');
+        if (italicBtn) {
+            italicBtn.classList.toggle('active', style.fontStyle === 'italic');
+        }
+        
+        // Update underline button
+        const underlineBtn = document.getElementById('underline-btn');
+        if (underlineBtn) {
+            underlineBtn.classList.toggle('active', style.textDecoration.includes('underline'));
+        }
+    }
+}
+
+function saveState() {
+    const state = {
+        content: getAllPagesContent(),
+        pageCount: pageCount,
+        paperSize: currentPaperSize
+    };
+    undoStack.push(JSON.stringify(state));
+    if (undoStack.length > 50) {
+        undoStack.shift();
+    }
+    redoStack = [];
+}
+
+function undo() {
+    if (undoStack.length > 1) {
+        redoStack.push(undoStack.pop());
+        const state = JSON.parse(undoStack[undoStack.length - 1]);
+        restoreState(state);
+    }
+}
+
+function redo() {
+    if (redoStack.length > 0) {
+        const state = JSON.parse(redoStack.pop());
+        undoStack.push(JSON.stringify(state));
+        restoreState(state);
+    }
+}
+
+function restoreState(state) {
+    pageCount = state.pageCount;
+    currentPaperSize = state.paperSize;
+    
+    const container = document.getElementById('document-container');
+    container.innerHTML = '';
+    
+    const pages = state.content.split('\n\n');
+    pages.forEach((pageContent, index) => {
+        if (pageContent.trim()) {
+            const page = document.createElement('div');
+            page.className = `document-page paper-${currentPaperSize}`;
+            page.contentEditable = true;
+            page.id = `page-${index + 1}`;
+            page.onkeyup = handleTyping;
+            page.onclick = updateStatus;
+            page.onpaste = handlePaste;
+            page.innerHTML = pageContent;
+            container.appendChild(page);
+        }
+    });
+    
+    updateStatus();
+}
+
+// Placeholder functions for missing features
+function insertHeader() { alert('Header editing would activate in full version'); }
+function insertFooter() { alert('Footer editing would activate in full version'); }
+function insertDocProperty() { alert('Document property insertion'); }
+function insertField() { alert('Field insertion'); }
+function insertAutoText() { alert('AutoText insertion'); }
+function insertDropCap() { alert('Drop cap insertion'); }
+function insertObject() { alert('Object insertion'); }
+function protectDocument() { alert('Document protection'); }
+function inspectDocument() { alert('Document inspection'); }
+function manageVersions() { alert('Version management'); }
+
